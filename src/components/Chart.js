@@ -1,10 +1,12 @@
 import * as Plot from "npm:@observablehq/plot";
 import * as d3 from "npm:d3";
-import {links, height, width, radius, radii, details, people, allPeople, nodes, midpoint, sortPeople, drag} from '/components/constants.js';
-// import { invalidation } from "observablehq:stdlib";
+import {links, height, width, radius, radii, details, people, allPeople, nodes, midpoint, sortPeople, drag, formatPeople} from '/components/constants.js';
 
-export function Chart() {
+export function Chart(color = 'black', invalidation = null, rgbaBad = null, rgbaGood = null, fam) {
 
+
+  // let formattedFam = formatPeople(fam);
+  console.log('fam', fam)
 
   const simulation = d3.forceSimulation(nodes)
     .force("radial", d3
@@ -27,7 +29,7 @@ export function Chart() {
 
   svg.append("g")
     .attr('fill', 'none')
-    .attr('stroke', 'black')
+    .attr('stroke', color)
     .selectAll("path")
     .data(hardCodedArcs)
     .join("path")
@@ -43,11 +45,26 @@ export function Chart() {
     .attr("stroke-dasharray", d => d.boundary ? "5,5" : "none")
 
   function determineLinkColor(l) {
-    if (l.quality && !l.reconsider) return '#005f0259'
-    if (l.quality && l.reconsider) return '#005F02'
+    let badColor = createRgbaString(rgbaBad);
+    let goodColor = createRgbaString(rgbaGood);
 
-    if (!l.quality && l.reconsider) return '#ff0000cc'
-    if (!l.quality && !l.reconsider) return '#ff000066'
+    // if (l.quality && !l.reconsider) return '#005f0259'
+    // if (l.quality && l.reconsider) return '#005F02'
+    if (l.quality && !l.reconsider) return goodColor
+    if (l.quality && l.reconsider) return goodColor;
+
+    // if (!l.quality && l.reconsider) return '#ff0000cc'
+    if (!l.quality && l.reconsider) return badColor;
+    // if (!l.quality && !l.reconsider) return '#ff000066'
+        if (!l.quality && !l.reconsider) return badColor
+  }
+
+  function createRgbaString(rgba) {
+    if (rgba) {
+      let {r, g, b, a} = rgba;
+      return `rgba(${r}, ${g}, ${b}, ${a}`
+    }
+    return '#000000' //optional maybe
   }
 
   // Append nodes.
@@ -78,7 +95,6 @@ export function Chart() {
     link.attr("d", d => {
       const mx = midpoint(d.source.x, d.target.x);
       const my = midpoint(d.source.y, d.target.y);
-
       return `M${d.source.x},${d.source.y} L${mx},${my} L${d.target.x},${d.target.y}`;
     });
     node
@@ -87,9 +103,6 @@ export function Chart() {
       .attr("transform", d => `translate(${d.x},${d.y})`)
   });
 
-  // invalidation.then(() => simulation.stop());
+  invalidation.then(() => simulation.stop());
   return svg.node();
-
-
-
 }

@@ -6,15 +6,20 @@ export const people = {
   outer: ["Nicolette", "Guy", "Karl"],
   }
 
-
 export const allPeople =(Object.entries(people)
   .flatMap(([group, person]) => person
   .map(name => ({ name: name, group: group })
     ))
   )
 
+export function formatPeople(people) {
+  let formatted = Object.entries(people)
+  .flatMap(([group, person]) => person
+  .map(name => ({ name: name, group: group })
+    ));
+  return formatted || [];
+}
 export const nodes = allPeople
-
 
 function makeLinks() {
  let data = []
@@ -37,7 +42,7 @@ export const links = makeLinks(allPeople);
 
 
 export const height = 1000;
-export const width = 1328;
+export const width = 1000;
 export const radius = 30.5
 export const radii = [0, 200, 400];
 export const details = ({
