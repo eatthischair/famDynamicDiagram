@@ -1,1 +1,1 @@
-{"title":"FamDynamicDiagram","config":{"root":"src"},"pages":[{"path":"/example-dashboard","source":"/example-dashboard.md","title":"Example dashboard"},{"path":"/example-report","source":"/example-report.md","title":"Example report"},{"path":"/","source":"/index.md","title":"A year of chess rankings"},{"path":"/weather","source":"/weather.md","title":"Weather report"}],"modules":[],"files":[]}
+{"title":"FamDynamicDiagram","config":{"root":"src"},"pages":[{"path":"/","source":"/index.md","title":"A year of chess rankings"}],"modules":[],"files":[]}
