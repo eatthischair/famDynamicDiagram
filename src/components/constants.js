@@ -10,20 +10,6 @@ export let allPeople = Object.entries(people).flatMap(([group, person]) =>
   person.map((name) => ({ name: name, group: group }))
 );
 
-// export function formatPeople(people = {}) {
-//   return Object.entries(people).flatMap(([group, person]) => {
-//     if (!person) return [];
-//     const list = Array.isArray(person)
-//       ? person
-//       : person
-//           .split(',')
-//           .map((s) => s.trim())
-//           .filter(Boolean);
-
-//     return list.map((name) => ({ name, group }));
-//   });
-// }
-
 export function makeLinks(people = allPeople) {
   let data = [];
   for (let i = 0; i < people.length; i++) {
@@ -42,6 +28,11 @@ export function makeLinks(people = allPeople) {
   return data;
 }
 
+export const hardCodedArcs = [
+  'M -100,-300  A 20,20 0,0,0 100,-300',
+  'M -300,-300  A 20,20 0,0,0 300,-300',
+  'M -500,-300  A 20,20 0,0,0 500,-300',
+];
 export const height = 1000;
 export const width = 1000;
 export const radius = 30.5;
@@ -91,9 +82,3 @@ export function drag(simulation) {
     .on('drag', dragged)
     .on('end', dragended);
 }
-
-export const hardCodedArcs = [
-  'M -100,-300  A 20,20 0,0,0 100,-300',
-  'M -300,-300  A 20,20 0,0,0 300,-300',
-  'M -500,-300  A 20,20 0,0,0 500,-300',
-];

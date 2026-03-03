@@ -23,7 +23,6 @@ export function Chart(
   fam,
   links
 ) {
-  console.log('links used', links);
   let nodes = allPeople;
 
   const simulation = d3

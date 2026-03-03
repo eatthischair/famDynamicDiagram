@@ -2,56 +2,19 @@
 
 ```js
 import { Chart } from './components/Chart.js';
-import { RenderLinksForm } from './RenderLinksForm.js';
 import { makeLinks } from './components/constants.js';
+import { renderLinksForm } from './components/pure.js';
 import { Generators } from 'observablehq:stdlib';
-```
-
-<!-- ```js
-let links = makeLinks(allPeople);
-``` -->
-
-```js
-function debounce(input, delay = 1000) {
-  return Generators.observe((notify) => {
-    let timer = null;
-    let value;
-
-    // On input, check if we recently reported a value.
-    // If we did, do nothing and wait for a delay;
-    // otherwise, report the current value and set a timeout.
-    function inputted() {
-      if (timer !== null) return;
-      notify((value = input.value));
-      timer = setTimeout(delayed, delay);
-    }
-
-    // After a delay, check if the last-reported value is the current value.
-    // If it’s not, report the new value.
-    function delayed() {
-      timer = null;
-      if (value === input.value) return;
-      notify((value = input.value));
-    }
-
-    (input.addEventListener('input', inputted), inputted());
-    return () => input.removeEventListener('input', inputted);
-  });
-}
 ```
 
 ```js
 let links = Mutable(makeLinks());
 
-let originalData = makeLinks();
-
 function linksIntoString(links) {
-  return RenderLinksForm(links).map((link, i) => {
-    const y = html` <button style="color:${link.quality === 'good' ? 'green' : 'red'}" onclick=${() => changeQuality('quality', links[i], i)}>${link.quality}</button> `;
-
-    const x = html` <button style="color:${link.boundary === 'good' ? 'green' : 'red'}" onclick=${() => changeQuality('boundary', link, i)}>${link.boundary}</button> `;
-
-    const z = html` <button style="color:${link.reconsider === 'good' ? 'green' : 'red'}" onclick=${() => changeQuality('reconsider', link, i)}>${link.reconsider}</button> `;
+  return renderLinksForm(links).map((link, i) => {
+    const y = renderToggleButton(link, 'quality', i);
+    const x = renderToggleButton(link, 'boundary', i);
+    const z = renderToggleButton(link, 'reconsider', i);
 
     return html`
       <div>
@@ -65,7 +28,12 @@ function linksIntoString(links) {
   });
 }
 
-function changeQuality(prop, link, i) {
+function renderToggleButton(link, prop, index) {
+  const value = link[prop];
+  return html` <button style="color:${value === 'good' ? 'green' : 'red'}" onclick=${() => updateLinkProperty(prop, link, index)}>${value}</button> `;
+}
+
+function updateLinkProperty(prop, link, i) {
   links.value = links.value.map((link, j) => {
     if (i === j) {
       return { ...link, [prop]: link[prop] ? false : true };
