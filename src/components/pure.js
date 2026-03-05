@@ -12,6 +12,13 @@ export function renderLinksForm(links) {
   });
 }
 
+export function createRgbaString(rgba) {
+  if (rgba) {
+    let { r, g, b, a } = rgba;
+    return `rgba(${r}, ${g}, ${b}, ${a}`;
+  }
+  return '#000000'; //optional maybe
+}
 /*```js
 function debounce(input, delay = 1000) {
   return Generators.observe((notify) => {

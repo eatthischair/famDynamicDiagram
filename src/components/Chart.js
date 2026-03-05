@@ -4,17 +4,13 @@ import {
   height,
   width,
   radius,
-  radii,
   details,
-  people,
   allPeople,
-  midpoint,
   sortPeople,
   drag,
-  makeLinks,
   hardCodedArcs,
 } from '/components/constants.js';
-
+import { createRgbaString } from '/components/pure.js';
 export function Chart(
   color = 'black',
   invalidation = null,
@@ -35,7 +31,7 @@ export function Chart(
       'charge',
       d3
         .forceCollide()
-        .radius(radius + 50)
+        .radius(radius + 20)
         .iterations(10000)
     )
     .alphaDecay(0.03);
@@ -78,14 +74,6 @@ export function Chart(
     if (!l.quality && !l.reconsider) return badColor;
   }
 
-  function createRgbaString(rgba) {
-    if (rgba) {
-      let { r, g, b, a } = rgba;
-      return `rgba(${r}, ${g}, ${b}, ${a}`;
-    }
-    return '#000000'; //optional maybe
-  }
-
   // Append nodes.
   const node = svg
     .append('g')
@@ -104,7 +92,7 @@ export function Chart(
     .attr('stroke-width', (d) =>
       details.covenant && d.group === 'inner' ? 0 : 1.5
     )
-    .attr('r', (d) => (d.group === 'inner' ? 60 : radius))
+    .attr('r', (d) => (d.group === 'inner' ? 40 : radius))
     .attr('cx', (i) => 200 * i + 1);
 
   //Text
@@ -118,9 +106,6 @@ export function Chart(
   //Event Listeners
   simulation.on('tick', () => {
     link.attr('d', (d) => {
-      const mx = midpoint(d.source.x, d.target.x);
-      const my = midpoint(d.source.y, d.target.y);
-      // return `M${d.source.x},${d.source.y} L${mx},${my} L${d.target.x},${d.target.y}`;
       return `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`;
     });
     node

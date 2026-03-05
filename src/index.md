@@ -9,7 +9,6 @@ import { Generators } from 'observablehq:stdlib';
 
 ```js
 let links = Mutable(makeLinks());
-
 function linksIntoString(links) {
   return renderLinksForm(links).map((link, i) => {
     const y = renderToggleButton(link, 'quality', i);
@@ -27,12 +26,10 @@ function linksIntoString(links) {
     `;
   });
 }
-
 function renderToggleButton(link, prop, index) {
   const value = link[prop];
   return html` <button style="color:${value === 'good' ? 'green' : 'red'}" onclick=${() => updateLinkProperty(prop, link, index)}>${value}</button> `;
 }
-
 function updateLinkProperty(prop, link, i) {
   links.value = links.value.map((link, j) => {
     if (i === j) {
@@ -49,8 +46,24 @@ function updateLinkProperty(prop, link, i) {
     ${linksIntoString(links).map(item => html`<span>${item}</span>`)}
   </div>
 </div>
+html`
 
+<details>
+  <summary style="cursor:pointer; font-weight:600;">
+    Advanced Settings
+  </summary>
+
+  <div style="margin-top: 0.5rem;">
+    <label>
+      Threshold:
+      <input type="number" value="10">
+    </label>
+  </div>
+</details>
 <div class="grid grid-cols-3 grid-rows-2">
+
+<details>
+<summary style="cursor:pointer; font-weight:600;">
 <div class="card" style=" font-weight: bold; max-height: 200px">
 
 ```js
@@ -65,6 +78,8 @@ const rgbaBad = view(
 ```
 
 </div>
+</summary>
+</details>
 <div class="card">
 
 ```js

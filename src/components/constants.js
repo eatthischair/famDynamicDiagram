@@ -1,7 +1,7 @@
 import * as d3 from 'npm:d3';
 
 export let people = {
-  inner: ['Jane & John'],
+  inner: ['Jane', 'John'],
   middle: ['John Jr', 'Scatman'],
   outer: ['Abraham', 'Karl', 'Aids'],
 };
@@ -33,6 +33,7 @@ export const hardCodedArcs = [
   'M -300,-300  A 20,20 0,0,0 300,-300',
   'M -500,-300  A 20,20 0,0,0 500,-300',
 ];
+
 export const height = 1000;
 export const width = 1000;
 export const radius = 30.5;
@@ -41,10 +42,6 @@ export const details = {
   covenant: true,
   god: true,
 };
-
-export function midpoint(a, b) {
-  return (a + b) / 2;
-}
 
 export function sortPeople(person) {
   if (person.group === 'inner') {
