@@ -147,5 +147,13 @@ export function Chart(
   });
 
   invalidation.then(() => simulation.stop());
-  return svg.node();
+
+  // return svg.node();
+  return Object.assign(svg.node(), {
+    updateStyle(color) {
+      // This ONLY changes the attribute, it doesn't touch the simulation!
+      console.log('updatestyle color', color);
+      link.attr('stroke', color);
+    },
+  });
 }

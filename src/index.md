@@ -1,4 +1,4 @@
-# A year of chess rankings
+# Family Dynamic Diagram
 
 ```js
 import { Chart } from './components/Chart.js';
@@ -82,7 +82,6 @@ const fam = view(
   <summary>
   Inner Relations
   </summary>
-
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'inner')).map(item => html`<span>${item}</span>`)}
   </div>
@@ -92,7 +91,6 @@ const fam = view(
   <summary>
   Middle Relations
   </summary>
-
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'middle')).map(item => html`<span>${item}</span>`)}
   </div>
@@ -102,19 +100,16 @@ const fam = view(
   <summary>
   Inner Relations
   </summary>
-
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'outer')).map(item => html`<span>${item}</span>`)}
   </div>
   </details>
-
 </details>
 
 <details>
-<summary>
-Color Options
-</summary>
-
+  <summary>
+  Color Options
+  </summary>
   <details>
     <summary>
       Bad Color Options
@@ -153,14 +148,26 @@ const rgbaGood = view(
 );
 ```
 
-  </div>
+```js
+const userColor = view(Inputs.color({ label: 'Link Color', value: '#999999' }));
+```
 
+  </div>
   </details>
-    </details>
+</details>
 
 <div class="card grid-row-span-2 grid-cols-span-2">
 
-${Chart("none", invalidation, rgbaBad, rgbaGood, fam, links)}
+```js
+displayChart.updateStyle(userColor);
+```
+
+```js
+const displayChart = Chart('none', invalidation, rgbaBad, rgbaGood, fam, links);
+display(displayChart);
+```
+
+<!-- ${Chart("none", invalidation, rgbaBad, rgbaGood, fam, links)} -->
 
 <button>Save Data </button>
 

@@ -21,6 +21,7 @@ export function renderButtonText(prop) {
 }
 
 export function createRgbaString(rgba) {
+  console.log('rbga string', rgba, typeof rgba);
   if (rgba) {
     let { r, g, b, a } = rgba;
     return `rgba(${r}, ${g}, ${b}, ${a}`;
