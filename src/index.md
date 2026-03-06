@@ -3,59 +3,48 @@
 ```js
 import { Chart } from './components/Chart.js';
 import { makeLinks } from './components/constants.js';
-import { renderLinksForm } from './components/pure.js';
+import { renderLinksForm, shapeData, renderButtonText } from './components/pure.js';
 import { Generators } from 'observablehq:stdlib';
 ```
 
 ```js
 let links = Mutable(makeLinks());
 
-const groupCounts = {
-  inner: 0,
-  middle: 0,
-  outer: 0,
-};
-
-links.value.forEach((l) => {
-  const g = l.source.group;
-  if (groupedLinks[g]) groupedLinks[g].push(l);
-});
-
-function countGroups(links) {}
 function linksIntoString(links) {
-  return renderLinksForm(links).map((link, i) => {
-    const y = renderToggleButton(link, 'quality', i);
-    const x = renderToggleButton(link, 'boundary', i);
-    const z = renderToggleButton(link, 'reconsider', i);
-
+  return links.map((link, i) => {
+    const y = renderToggleButton(link, 'quality');
+    const x = renderToggleButton(link, 'boundary');
+    const z = renderToggleButton(link, 'reconsider');
     return html`
       <div>
         Relation between
-        <span>${link.source}</span>
+        <span>${link.source.name}</span>
         and
-        <span>${link.target}</span>
+        <span>${link.target.name}</span>
         is ${y} the boundary is ${x} and the communication is ${z}
       </div>
     `;
   });
 }
-function renderToggleButton(link, prop, index) {
+
+function renderToggleButton(link, prop) {
   const value = link[prop];
   return html`
     <button
-      style="color:${value === 'good' ? 'green' : 'red'}"
-      onclick=${() => updateLinkProperty(prop, link, index)}
+      style="color:${value ? 'green' : 'red'}"
+      onclick=${() => toggleLinkProperty(prop, link)}
     >
-      ${value}
+      ${renderButtonText(value)}
     </button>
   `;
 }
-function updateLinkProperty(prop, link, i) {
-  links.value = links.value.map((link, j) => {
-    if (i === j) {
-      return { ...link, [prop]: link[prop] ? false : true };
+
+function toggleLinkProperty(prop, link) {
+  links.value = links.value.map((l) => {
+    if (_.isEqual(l, link)) {
+      return { ...l, [prop]: !l[prop] };
     } else {
-      return { ...link };
+      return { ...l };
     }
   });
 }
@@ -88,30 +77,43 @@ const fam = view(
   <summary>
   Relations
   </summary>
-  <!-- <div>
-    ${linksIntoString(links).map(item => html`<span>${item}</span>`)}
-  </div> -->
+
   <details>
-  <summary>Inner Relations</summary>
+  <summary>
+  Inner Relations
+  </summary>
+
   <div>
-    ${linksIntoString(innerLinks).map(item => html`<span>${item}</span>`)}
+   ${linksIntoString(links.filter(item => item.source.group === 'inner')).map(item => html`<span>${item}</span>`)}
   </div>
+  </details>
+
+  <details>
+  <summary>
+  Middle Relations
+  </summary>
+
+  <div>
+   ${linksIntoString(links.filter(item => item.source.group === 'middle')).map(item => html`<span>${item}</span>`)}
+  </div>
+  </details>
+
+  <details>
+  <summary>
+  Inner Relations
+  </summary>
+
+  <div>
+   ${linksIntoString(links.filter(item => item.source.group === 'outer')).map(item => html`<span>${item}</span>`)}
+  </div>
+  </details>
+
 </details>
 
 <details>
-  <summary>Middle Relations</summary>
-  <div>
-    ${linksIntoString(middleLinks).map(item => html`<span>${item}</span>`)}
-  </div>
-</details>
-
-<details>
-  <summary>Outer Relations</summary>
-  <div>
-    ${linksIntoString(outerLinks).map(item => html`<span>${item}</span>`)}
-  </div>
-</details>
-</details>
+<summary>
+Color Options
+</summary>
 
   <details>
     <summary>
@@ -132,7 +134,7 @@ const rgbaBad = view(
 
   </div>
   </details>
-<!-- </div> -->
+
   <details>
     <summary>
       Good Color Options
@@ -152,7 +154,9 @@ const rgbaGood = view(
 ```
 
   </div>
+
   </details>
+    </details>
 
 <div class="card grid-row-span-2 grid-cols-span-2">
 

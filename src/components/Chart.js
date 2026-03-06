@@ -11,6 +11,7 @@ import {
   hardCodedArcs,
 } from '/components/constants.js';
 import { createRgbaString } from '/components/pure.js';
+
 export function Chart(
   color = 'black',
   invalidation = null,
@@ -21,20 +22,6 @@ export function Chart(
 ) {
   let nodes = allPeople;
 
-  // nodes.shift();
-  // nodes.push(
-  //   { name: 'Jane', group: 'inner' },
-  //   { name: 'John', group: 'inner' }
-  // );
-  console.log('struct clone nodes', structuredClone(nodes));
-  // console.log('struct clone', structuredClone(links));
-  // links.push({
-  //   boundary: true,
-  //   quality: true,
-  //   reconsider: true,
-  //   source: { name: 'Jane', group: 'inner' },
-  //   target: { name: 'John', group: 'inner' },
-  // });
   const simulation = d3
     .forceSimulation(nodes)
     .force(

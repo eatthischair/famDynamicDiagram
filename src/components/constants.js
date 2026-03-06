@@ -40,7 +40,6 @@ export function makeLinks(people = allPeople) {
     quality: true,
     boundary: false,
   });
-  console.log('makelinnks', structuredClone(data));
   return data;
 }
 
