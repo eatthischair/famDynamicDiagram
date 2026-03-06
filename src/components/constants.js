@@ -1,7 +1,7 @@
 import * as d3 from 'npm:d3';
 
 export let people = {
-  inner: ['Jane', 'John'],
+  inner: ['Jane & John'],
   middle: ['John Jr', 'Scatman'],
   outer: ['Abraham', 'Karl', 'Aids'],
 };
@@ -25,6 +25,22 @@ export function makeLinks(people = allPeople) {
       }
     }
   }
+
+  let parents;
+  for (var node of people) {
+    if (node.group === 'inner') {
+      parents = node.name.split('&');
+    }
+  }
+
+  data.unshift({
+    source: { name: parents[0], group: 'inner' }, // name of first inner circle
+    target: { name: parents[1], group: 'inner' }, // name of second inner circle
+    reconsider: false,
+    quality: true,
+    boundary: false,
+  });
+  console.log('makelinnks', structuredClone(data));
   return data;
 }
 

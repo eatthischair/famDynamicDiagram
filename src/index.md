@@ -9,6 +9,19 @@ import { Generators } from 'observablehq:stdlib';
 
 ```js
 let links = Mutable(makeLinks());
+
+const groupCounts = {
+  inner: 0,
+  middle: 0,
+  outer: 0,
+};
+
+links.value.forEach((l) => {
+  const g = l.source.group;
+  if (groupedLinks[g]) groupedLinks[g].push(l);
+});
+
+function countGroups(links) {}
 function linksIntoString(links) {
   return renderLinksForm(links).map((link, i) => {
     const y = renderToggleButton(link, 'quality', i);
@@ -28,7 +41,14 @@ function linksIntoString(links) {
 }
 function renderToggleButton(link, prop, index) {
   const value = link[prop];
-  return html` <button style="color:${value === 'good' ? 'green' : 'red'}" onclick=${() => updateLinkProperty(prop, link, index)}>${value}</button> `;
+  return html`
+    <button
+      style="color:${value === 'good' ? 'green' : 'red'}"
+      onclick=${() => updateLinkProperty(prop, link, index)}
+    >
+      ${value}
+    </button>
+  `;
 }
 function updateLinkProperty(prop, link, i) {
   links.value = links.value.map((link, j) => {
@@ -41,30 +61,63 @@ function updateLinkProperty(prop, link, i) {
 }
 ```
 
-<div>
-  <div>
-    ${linksIntoString(links).map(item => html`<span>${item}</span>`)}
+  <details>
+    <summary>
+      Family Input
+    </summary>
+  <div class="card">
+
+```js
+const fam = view(
+  Inputs.form({
+    inner: Inputs.text({ label: 'Couple', placeholder: 'Name of parents', submit: true }),
+    middle: Inputs.text({ label: 'Kids', placeholder: 'Name of children', submit: true }),
+    outer: Inputs.text({
+      label: 'Peripheral',
+      placeholder: 'Name of peripheral family',
+      submit: true,
+    }),
+  })
+);
+```
+
   </div>
-</div>
-html`
+  </details>
 
 <details>
-  <summary style="cursor:pointer; font-weight:600;">
-    Advanced Settings
+  <summary>
+  Relations
   </summary>
-
-  <div style="margin-top: 0.5rem;">
-    <label>
-      Threshold:
-      <input type="number" value="10">
-    </label>
+  <!-- <div>
+    ${linksIntoString(links).map(item => html`<span>${item}</span>`)}
+  </div> -->
+  <details>
+  <summary>Inner Relations</summary>
+  <div>
+    ${linksIntoString(innerLinks).map(item => html`<span>${item}</span>`)}
   </div>
 </details>
-<div class="grid grid-cols-3 grid-rows-2">
 
 <details>
-<summary style="cursor:pointer; font-weight:600;">
-<div class="card" style=" font-weight: bold; max-height: 200px">
+  <summary>Middle Relations</summary>
+  <div>
+    ${linksIntoString(middleLinks).map(item => html`<span>${item}</span>`)}
+  </div>
+</details>
+
+<details>
+  <summary>Outer Relations</summary>
+  <div>
+    ${linksIntoString(outerLinks).map(item => html`<span>${item}</span>`)}
+  </div>
+</details>
+</details>
+
+  <details>
+    <summary>
+      Bad Color Options
+    </summary>
+    <div class="card">
 
 ```js
 const rgbaBad = view(
@@ -77,10 +130,15 @@ const rgbaBad = view(
 );
 ```
 
-</div>
-</summary>
-</details>
-<div class="card">
+  </div>
+  </details>
+<!-- </div> -->
+  <details>
+    <summary>
+      Good Color Options
+    </summary>
+
+  <div class="card">
 
 ```js
 const rgbaGood = view(
@@ -88,29 +146,18 @@ const rgbaGood = view(
     r: Inputs.range([0, 255], { step: 1, label: 'r', value: 0 }),
     g: Inputs.range([0, 255], { step: 1, label: 'g', value: 200 }),
     b: Inputs.range([0, 255], { step: 1, label: 'b', value: 0 }),
-    a: Inputs.range([0, 1], { step: 0.01, label: 'a', value: 0.1 }),
+    a: Inputs.range([0, 1], { step: 0.01, label: 'a', value: 0.3 }),
   })
 );
 ```
 
-</div>
+  </div>
+  </details>
 
-<div class="card">
-
-```js
-const fam = view(
-  Inputs.form({
-    inner: Inputs.text({ label: 'Couple', placeholder: 'Name of parents', submit: true }),
-    middle: Inputs.text({ label: 'Kids', placeholder: 'Name of children', submit: true }),
-    outer: Inputs.text({ label: 'Peripheral', placeholder: 'Name of peripheral family', submit: true }),
-  })
-);
-```
-
-</div>
-</div>
 <div class="card grid-row-span-2 grid-cols-span-2">
 
 ${Chart("none", invalidation, rgbaBad, rgbaGood, fam, links)}
+
+<button>Save Data </button>
 
 </div>

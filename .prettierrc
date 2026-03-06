@@ -4,12 +4,14 @@
   "trailingComma": "es5",
   "printWidth": 80,
   "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "ignore",
   "overrides": [
     {
       "files": "*.md",
       "options": {
-        "printWidth": 999,
-        "proseWrap": "never"
+        "printWidth": 100,
+        "proseWrap": "never",
+        "embeddedLanguageFormatting": "auto"
       }
     }
   ]
