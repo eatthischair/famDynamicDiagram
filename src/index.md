@@ -110,46 +110,15 @@ const fam = view(
   <summary>
   Color Options
   </summary>
-  <details>
-    <summary>
-      Bad Color Options
-    </summary>
-    <div class="card">
-
-```js
-const rgbaBad = view(
-  Inputs.form({
-    r: Inputs.range([0, 255], { step: 1, label: 'r', value: 200 }),
-    g: Inputs.range([0, 255], { step: 1, label: 'g', value: 1 }),
-    b: Inputs.range([0, 255], { step: 1, label: 'b', value: 1 }),
-    a: Inputs.range([0, 1], { step: 0.01, label: 'a', value: 0.8 }),
-  })
-);
-```
-
-  </div>
-  </details>
-
-  <details>
-    <summary>
-      Good Color Options
-    </summary>
 
   <div class="card">
 
 ```js
-const rgbaGood = view(
-  Inputs.form({
-    r: Inputs.range([0, 255], { step: 1, label: 'r', value: 0 }),
-    g: Inputs.range([0, 255], { step: 1, label: 'g', value: 200 }),
-    b: Inputs.range([0, 255], { step: 1, label: 'b', value: 0 }),
-    a: Inputs.range([0, 1], { step: 0.01, label: 'a', value: 0.3 }),
-  })
-);
+const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#7ec39a' }));
 ```
 
 ```js
-const userColor = view(Inputs.color({ label: 'Link Color', value: '#999999' }));
+const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#a01c1c' }));
 ```
 
   </div>
@@ -159,15 +128,13 @@ const userColor = view(Inputs.color({ label: 'Link Color', value: '#999999' }));
 <div class="card grid-row-span-2 grid-cols-span-2">
 
 ```js
-displayChart.updateStyle(userColor);
+displayChart.updateGoodColors(goodColors, badColors);
 ```
 
 ```js
-const displayChart = Chart('none', invalidation, rgbaBad, rgbaGood, fam, links);
+const displayChart = Chart('none', invalidation, null, null, fam, links);
 display(displayChart);
 ```
-
-<!-- ${Chart("none", invalidation, rgbaBad, rgbaGood, fam, links)} -->
 
 <button>Save Data </button>
 

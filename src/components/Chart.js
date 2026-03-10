@@ -61,18 +61,8 @@ export function Chart(
     .selectAll('path')
     .data(links)
     .join('path')
-    .attr('stroke', (d) => determineLinkColor(d))
     .attr('stroke-width', (d) => (d.reconsider ? 2.5 : 8))
     .attr('stroke-dasharray', (d) => (d.boundary ? '5,5' : 'none'));
-
-  function determineLinkColor(l) {
-    let badColor = createRgbaString(rgbaBad);
-    let goodColor = createRgbaString(rgbaGood);
-    if (l.quality && !l.reconsider) return goodColor;
-    if (l.quality && l.reconsider) return goodColor;
-    if (!l.quality && l.reconsider) return badColor;
-    if (!l.quality && !l.reconsider) return badColor;
-  }
 
   // Append nodes.
   const node = svg
@@ -110,22 +100,13 @@ export function Chart(
   innerPerson
     .append('circle')
     .attr('r', radius)
-    .attr('fill', (_, i) => (i === 0 ? '#989898' : '#a09f9f'));
+    .attr('fill', (_, i) => (i === 0 ? '#989898' : '#c1bdbd'));
   innerPerson
     .append('text')
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .attr('font-size', '12px')
     .text((d) => d);
-  node
-    .filter((d) => d.group === 'inner')
-    .append('path')
-    .attr('stroke-width', 2)
-    .attr('fill', 'none')
-    .attr('d', `M${-(80 - radius - 30)},0 L${80 - radius - 30},0`)
-    .attr('stroke', determineLinkColor(links[0]))
-    .attr('stroke-width', (d) => (links[0].reconsider ? 2.5 : 8))
-    .attr('stroke-dasharray', (d) => (links[0].boundary ? '3,3' : 'none'));
 
   //Text
   node
@@ -148,12 +129,20 @@ export function Chart(
 
   invalidation.then(() => simulation.stop());
 
-  // return svg.node();
   return Object.assign(svg.node(), {
-    updateStyle(color) {
-      // This ONLY changes the attribute, it doesn't touch the simulation!
-      console.log('updatestyle color', color);
-      link.attr('stroke', color);
+    updateGoodColors(goodColor, badColor) {
+      link.attr('stroke', (d) => (d.quality ? goodColor : badColor));
+
+      node
+        .filter((d) => d.group === 'inner')
+        .append('path')
+        .attr('stroke-width', 2)
+        .attr('fill', 'none')
+        .attr('d', `M${-(80 - radius - 30)},0 L${80 - radius - 30},0`)
+        .attr('stroke', (d) => (links[0].quality ? goodColor : badColor))
+
+        .attr('stroke-width', (d) => (links[0].reconsider ? 2.5 : 8))
+        .attr('stroke-dasharray', (d) => (links[0].boundary ? '3,3' : 'none'));
     },
   });
 }
