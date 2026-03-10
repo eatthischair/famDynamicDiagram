@@ -1,5 +1,7 @@
 import * as Plot from 'npm:@observablehq/plot';
 import * as d3 from 'npm:d3';
+import _ from 'npm:lodash';
+
 import {
   height,
   width,
@@ -132,7 +134,6 @@ export function Chart(
   return Object.assign(svg.node(), {
     updateGoodColors(goodColor, badColor) {
       link.attr('stroke', (d) => (d.quality ? goodColor : badColor));
-
       node
         .filter((d) => d.group === 'inner')
         .append('path')

@@ -78,12 +78,13 @@ const fam = view(
   Relations
   </summary>
 
-  <details>
+  <details open>
   <summary>
   Inner Relations
   </summary>
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'inner')).map(item => html`<span>${item}</span>`)}
+
   </div>
   </details>
 
