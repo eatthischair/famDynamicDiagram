@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "allowJs": true, // Let JS files coexist with TS files
+    "checkJs": true, // Optional: Type-check your JS files too
+    "noEmit": true, // Don’t output compiled JS yet
+    "strict": true, // Enable strict type checking gradually
+    "skipLibCheck": true // Skip checking node_modules for now
+  },
+  "include": ["src/**/*"]
+}

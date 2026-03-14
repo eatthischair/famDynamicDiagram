@@ -34,14 +34,22 @@ export function renderButtonText(prop) {
 }
 
 export function flatten(people) {
-  console.log('flatten', people)
-  if (!people) return
+  console.log('flatten', people, formatData(people))
+
+  // //ghetto ass type checking
+  // for (const group in people) {
+  //   if (typeof people[group] === 'string')
+  //     people[group] = people[group].split(',')
+  // }
+
   return Object.entries(people).flatMap(([group, person]) =>
+    // if (typeof people === 'string') people = [people];
     person.map((name) => ({ name: name, group: group }))
   )
 }
 
 export function makeLinks(people) {
+  console.log('makelinks people', people)
   let data = []
   for (let i = 0; i < people.length; i++) {
     for (let j = i + 1; j < people.length; j++) {
