@@ -6,6 +6,12 @@ export function renderLinksForm(links) {
   })
 }
 
+export const emptyObj = {
+  inner: '',
+  middle: '',
+  outer: '',
+}
+
 export function shapeData(link) {
   return {
     source: link.source.name,
@@ -17,39 +23,74 @@ export function shapeData(link) {
 }
 
 export function formatData(fam) {
-  console.log('fam input', fam)
-  for (const group in fam) {
-    fam[group] = fam[group].split(',')
-    fam[group] = fam[group].map((p) => p.trim())
-
-    let parentsAlreadyFormatted = fam.inner[0].includes('&')
-    if (group === 'inner' && !parentsAlreadyFormatted) {
-      fam[group] = [`${fam[group][0]} & ${fam[group][1]}`]
-    }
-  }
+  //for now this is fine. as long as shitty data isnt somehow saved to storage
   return fam
 }
+
+export function formatInner(str) {
+  let alreadyFormatted = str.includes('&')
+  if (!alreadyFormatted) {
+    str = str.trim()
+    str = str.split(',')
+    str = `${str[0]} & ${str[1]}`
+  }
+  return [str] //always return array bc always string coming from input
+}
+
+export function formatDataFromTextInput(fam) {
+  let res = {}
+  //from text input obj to an array of string
+  for (const group in fam) {
+    let cur: string = fam[group]
+
+    if (group === 'inner') {
+      res.inner = formatInner(cur)
+    } else if (cur.includes(',')) {
+      //i.e. there are multiple elements in the string
+      res[group] = cur.split(',').map((p) => p.trim())
+    } else {
+      //else bc what if only one item
+      res[group] = [cur]
+    }
+  }
+  return res
+  //circuitous way to turn delimited strings in a array. there must be something better i s2g
+}
+
 export function renderButtonText(prop) {
   return prop ? 'good' : 'bad'
 }
 
 export function flatten(people) {
-  console.log('flatten', people, formatData(people))
+  //takes input obj and turns it into nodes. an array of objects like so [{name:johmmy group: inner}, {name: binge, group: outer}]
+  console.log('flatten input', people)
+  //in memory: stored as an array of strings, but must be visible in text boxes as strings with comma
+  if (people === null) {
+    return null
+  }
 
-  // //ghetto ass type checking
-  // for (const group in people) {
-  //   if (typeof people[group] === 'string')
-  //     people[group] = people[group].split(',')
-  // }
+  let aids = Object.entries(people).flatMap(([group, person]) => {
+    let isEmpty = person[0] === '' // person = [''];
+    if (!isEmpty) {
+      return person.map((name) => ({ name: name, group: group }))
+    }
+  })
 
-  return Object.entries(people).flatMap(([group, person]) =>
-    // if (typeof people === 'string') people = [people];
-    person.map((name) => ({ name: name, group: group }))
-  )
+  let res = []
+  for (let i = 0; i < aids.length; i++) {
+    if (aids[i]) {
+      res.push(aids[i])
+    }
+  }
+  //awful but it works
+  return res
 }
 
 export function makeLinks(people) {
-  console.log('makelinks people', people)
+  if (people === null) {
+    return null
+  }
+
   let data = []
   for (let i = 0; i < people.length; i++) {
     for (let j = i + 1; j < people.length; j++) {

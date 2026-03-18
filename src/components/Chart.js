@@ -13,6 +13,11 @@ import {
 import { makeLinks } from '/components/pure.js'
 
 export function Chart(invalidation, links, nodes) {
+  console.log('chart', arguments)
+
+  if (links === null) links = {}
+  if (nodes === null) nodes = {}
+
   const simulation = d3
     .forceSimulation(nodes)
     .force(

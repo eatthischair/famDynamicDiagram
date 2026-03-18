@@ -2,13 +2,23 @@
 
 ```js
 import { Chart } from './components/Chart.js'
-import { formatData, renderButtonText, makeLinks, flatten } from './components/pure.js'
+import {
+  formatData,
+  renderButtonText,
+  makeLinks,
+  flatten,
+  formatDataFromTextInput,
+} from './components/pure.js'
 import { Generators } from 'observablehq:stdlib'
 ```
 
 ```js
 let people = Mutable(flatten(famNames))
-let links = Mutable(makeLinks(people.value))
+let links = Mutable(makeLinks(people?.value))
+function updatePeopleAndLinks(ppl) {
+  people.value = ppl
+  links.value = makeLinks(ppl)
+}
 
 function linksIntoString(links) {
   return links.map((link, i) => {
@@ -32,14 +42,16 @@ function renderToggleButton(link, prop) {
   return html`
     <button
       style="color:${value ? 'green' : 'red'}"
-      onclick=${() => toggleLinkProperty(prop, link)}
+      onclick=${(e) => toggleLinkProperty(prop, link, e)}
     >
       ${renderButtonText(value)}
     </button>
   `
 }
 
-function toggleLinkProperty(prop, link) {
+function toggleLinkProperty(prop, link, e) {
+  console.log('eee', e)
+  e.preventDefault()
   links.value = links.value.map((l) => {
     if (_.isEqual(l, link)) {
       return { ...l, [prop]: !l[prop] }
@@ -57,7 +69,7 @@ function toggleLinkProperty(prop, link) {
   <div class="card">
 
 ```js
-const famNames = JSON.parse(localStorage.getItem('penis'))
+const famNames = JSON.parse(localStorage.getItem('fam'))
 ```
 
 ```js
@@ -84,12 +96,16 @@ const fam = view(
 
 ```js
 function onClick() {
-  let formatted = formatData(fam)
-  console.log('window', fam, formatted)
-  if (!_.isEqual(formatted, formatData(JSON.parse(window.localStorage.getItem('penis')))))
-    console.log('penis haha')
-  localStorage.setItem('penis', JSON.stringify(formatted))
+  let formatted = formatDataFromTextInput(fam)
+  let oldData = formatData(JSON.parse(window.localStorage.getItem('fam')))
+
+  //probably need to make sure data is formatted somehow idk
+  if (!_.isEqual(formatted, formatData(JSON.parse(window.localStorage.getItem('fam')))))
+    console.log('penis haha', people, 'newdata', flatten(formatted))
+  updatePeopleAndLinks(flatten(formatted))
+  localStorage.setItem('fam', JSON.stringify(formatted))
 }
+
 function Save() {
   return html`
     <div>
@@ -101,20 +117,25 @@ function Save() {
 function clear() {
   window.localStorage.clear()
 }
-function clearStorage() {
+
+function ClearStorage() {
   return html`
     <div>
       <button onclick=${clear}>Clear</button>
     </div>
   `
 }
-display(clearStorage)
 ```
 
   <div>
     ${Save()}
 
   </div>
+
+  <div>
+   ${ClearStorage()}
+
+   </div>
 
   </div>
   </details>
@@ -124,7 +145,7 @@ display(clearStorage)
   Relations
   </summary>
 
-  <details open>
+  <details>
   <summary>
   Inner Relations
   </summary>
@@ -145,7 +166,7 @@ display(clearStorage)
 
   <details>
   <summary>
-  Inner Relations
+  Outer Relations
   </summary>
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'outer')).map(item => html`<span>${item}</span>`)}
