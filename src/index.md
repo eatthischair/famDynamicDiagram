@@ -5,19 +5,25 @@ import { Chart } from './components/Chart.js'
 import {
   formatData,
   renderButtonText,
-  makeLinks,
+  initializeLinks,
   flatten,
   formatDataFromTextInput,
+  shapeLinksForSave,
 } from './components/pure.js'
 import { Generators } from 'observablehq:stdlib'
 ```
 
 ```js
-let people = Mutable(flatten(famNames))
-let links = Mutable(makeLinks(people?.value))
-function updatePeopleAndLinks(ppl) {
+let savedLinkData = JSON.parse(localStorage.getItem('links'))
+
+let people = Mutable(flatten(JSON.parse(localStorage.getItem('fam'))))
+let links = Mutable(initializeLinks(people.value, savedLinkData))
+
+function updatePeople(ppl) {
   people.value = ppl
-  links.value = makeLinks(ppl)
+  let newLinks = initializeLinks(ppl, savedLinkData)
+  links.value = newLinks
+  localStorage.setItem('links', JSON.stringify(newLinks))
 }
 
 function linksIntoString(links) {
@@ -50,7 +56,6 @@ function renderToggleButton(link, prop) {
 }
 
 function toggleLinkProperty(prop, link, e) {
-  console.log('eee', e)
   e.preventDefault()
   links.value = links.value.map((l) => {
     if (_.isEqual(l, link)) {
@@ -60,13 +65,27 @@ function toggleLinkProperty(prop, link, e) {
     }
   })
 }
+
+function saveLinksToLocalStorage() {
+  console.log('im being called, boss')
+  let linksForSave = initializeLinks(people.value, links.value)
+  links.value = linksForSave
+  localStorage.setItem('links', JSON.stringify(linksForSave))
+}
+
+function saveLinks() {
+  return html`
+    <div>
+      <button onclick=${saveLinksToLocalStorage}>Save</button>
+    </div>
+  `
+}
 ```
 
-  <details>
-    <summary>
-      Family Input
-    </summary>
-  <div class="card">
+ <details> <summary>1. Family Input </summary>
+   <div class="card">
+
+Input the names of your family members, **separated by commas**
 
 ```js
 const famNames = JSON.parse(localStorage.getItem('fam'))
@@ -92,24 +111,29 @@ const fam = view(
     }),
   })
 )
+
+const covenantAndGod = view(
+  Inputs.form({
+    covenant: Inputs.toggle({ label: 'Covenant', value: false }),
+    god: Inputs.toggle({ label: 'God', value: false }),
+  })
+)
 ```
 
-```js
-function onClick() {
-  let formatted = formatDataFromTextInput(fam)
-  let oldData = formatData(JSON.parse(window.localStorage.getItem('fam')))
+When you are finished, click **Save**
 
-  //probably need to make sure data is formatted somehow idk
-  if (!_.isEqual(formatted, formatData(JSON.parse(window.localStorage.getItem('fam')))))
-    console.log('penis haha', people, 'newdata', flatten(formatted))
-  updatePeopleAndLinks(flatten(formatted))
+```js
+function savePeople() {
+  let formatted = formatDataFromTextInput(fam)
+  updatePeople(flatten(formatted))
   localStorage.setItem('fam', JSON.stringify(formatted))
+  localStorage.setItem('extraData', JSON.stringify(covenantAndGod))
 }
 
 function Save() {
   return html`
     <div>
-      <button onclick=${onClick}>Save</button>
+      <button onclick=${savePeople}>Save</button>
     </div>
   `
 }
@@ -118,7 +142,7 @@ function clear() {
   window.localStorage.clear()
 }
 
-function ClearStorage() {
+function clearStorage() {
   return html`
     <div>
       <button onclick=${clear}>Clear</button>
@@ -133,7 +157,7 @@ function ClearStorage() {
   </div>
 
   <div>
-   ${ClearStorage()}
+   ${clearStorage()}
 
    </div>
 
@@ -142,12 +166,12 @@ function ClearStorage() {
 
 <details>
   <summary>
-  Relations
+  2. Relations
   </summary>
 
   <details>
   <summary>
-  Inner Relations
+  Inner
   </summary>
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'inner')).map(item => html`<span>${item}</span>`)}
@@ -157,7 +181,7 @@ function ClearStorage() {
 
   <details>
   <summary>
-  Middle Relations
+  Middle
   </summary>
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'middle')).map(item => html`<span>${item}</span>`)}
@@ -166,13 +190,32 @@ function ClearStorage() {
 
   <details>
   <summary>
-  Outer Relations
+  Outer
   </summary>
   <div>
    ${linksIntoString(links.filter(item => item.source.group === 'outer')).map(item => html`<span>${item}</span>`)}
   </div>
   </details>
+<div>
+${saveLinks()}
+
+</div>
 </details>
+
+</details>
+
+<div class="card grid-row-span-2 grid-cols-span-2">
+
+```js
+{
+  displayChart.updateGoodColors(goodColors, badColors)
+}
+```
+
+```js
+const displayChart = Chart(invalidation, links, people, covenantAndGod)
+display(displayChart)
+```
 
 <details>
   <summary>
@@ -191,19 +234,4 @@ const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#a01c1c' }))
 
   </div>
   </details>
-</details>
-
-<div class="card grid-row-span-2 grid-cols-span-2">
-
-```js
-{
-  displayChart.updateGoodColors(goodColors, badColors)
-}
-```
-
-```js
-const displayChart = Chart(invalidation, links, people)
-display(displayChart)
-```
-
 </div>

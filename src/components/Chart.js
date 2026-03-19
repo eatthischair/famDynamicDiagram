@@ -10,11 +10,8 @@ import {
   drag,
   hardCodedArcs,
 } from '/components/constants.js'
-import { makeLinks } from '/components/pure.js'
 
 export function Chart(invalidation, links, nodes) {
-  console.log('chart', arguments)
-
   if (links === null) links = {}
   if (nodes === null) nodes = {}
 
@@ -22,16 +19,16 @@ export function Chart(invalidation, links, nodes) {
     .forceSimulation(nodes)
     .force(
       'radial',
-      d3.forceRadial((d, i) => sortPeople(d), 0, -(height / 2) * 0.6)
+      d3.forceRadial((d, i) => sortPeople(d), 0, -(height / 2) * 0.6) //??
     )
     .force(
       'charge',
       d3
         .forceCollide()
         .radius(radius + 20)
-        .iterations(100)
+        .iterations(10)
     )
-    .alphaDecay(0.03)
+    .alphaDecay(0.02)
 
   // Create the container SVG.
   const svg = d3

@@ -32,7 +32,7 @@ export function formatInner(str) {
   if (!alreadyFormatted) {
     str = str.trim()
     str = str.split(',')
-    str = `${str[0]} & ${str[1]}`
+    str = `${str[0].trim()} & ${str[1].trim()}`
   }
   return [str] //always return array bc always string coming from input
 }
@@ -63,7 +63,6 @@ export function renderButtonText(prop) {
 
 export function flatten(people) {
   //takes input obj and turns it into nodes. an array of objects like so [{name:johmmy group: inner}, {name: binge, group: outer}]
-  console.log('flatten input', people)
   //in memory: stored as an array of strings, but must be visible in text boxes as strings with comma
   if (people === null) {
     return null
@@ -85,8 +84,55 @@ export function flatten(people) {
   //awful but it works
   return res
 }
+// export function shapeLinksForSave(links) {
+//   console.log('shapelinksforsave', links)
+//   //remove coordinate data so d3 can remake on load
+//   //for now
 
-export function makeLinks(people) {
+//   let newLinks = links.map((link) => {
+//     return makeLinkObj(link)
+//   })
+
+//   return newLinks
+// }
+
+// export function makeLinkObj(link) {
+//   //remove all d3 related values
+//   let newLink = {
+//     boundary: link.boundary,
+//     quality: link.quality,
+//     reconsider: link.reconsider,
+//     source: {
+//       name: link.source.name,
+//       group: link.source.group,
+//     },
+//     target: {
+//       name: link.target.name,
+//       group: link.target.group,
+//     },
+//   }
+//   console.log('newlink', newLink)
+//   return newLink
+// }
+
+export function linkFromSave(sourceName, targetName, savedLinkData) {
+  console.log('LINKFROMSAVE', arguments)
+  if (!savedLinkData) return
+
+  for (let i = 0; i < savedLinkData.length; i++) {
+    let cur = savedLinkData[i]
+    let curSourceName = cur.source.name
+    let curTargetName = cur.target.name
+    if (sourceName === curSourceName && targetName === curTargetName) {
+      console.log('found right obj boss', cur)
+      //found right object
+      return cur
+    }
+  }
+}
+export function initializeLinks(people, savedLinkData) {
+  console.log('initializeLinks', people, savedLinkData)
+
   if (people === null) {
     return null
   }
@@ -94,22 +140,26 @@ export function makeLinks(people) {
   let data = []
   for (let i = 0; i < people.length; i++) {
     for (let j = i + 1; j < people.length; j++) {
-      if (Math.random() > 0) {
-        data.push({
-          source: people[i],
-          target: people[j],
-          reconsider: j > people.length / 2 ? false : true,
-          quality: j > people.length / 2 ? true : false,
-          boundary: j < people.length / 2 ? true : false,
-        })
-      }
+      let savedLink = linkFromSave(
+        people[i].name,
+        people[j].name,
+        savedLinkData
+      )
+
+      data.push({
+        source: people[i],
+        target: people[j],
+        reconsider: savedLink?.reconsider || false,
+        quality: savedLink?.quality || false,
+        boundary: savedLink?.boundary || false,
+      })
     }
   }
 
   let parents
   for (var node of people) {
     if (node.group === 'inner') {
-      parents = node.name.split('&')
+      parents = node.name.split('&').map((p) => p.trim())
     }
   }
 
@@ -117,7 +167,7 @@ export function makeLinks(people) {
     source: { name: parents[0], group: 'inner' }, // name of first inner circle
     target: { name: parents[1], group: 'inner' }, // name of second inner circle
     reconsider: false,
-    quality: true,
+    quality: false,
     boundary: false,
   })
   return data
