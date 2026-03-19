@@ -11,7 +11,8 @@ import {
   hardCodedArcs,
 } from '/components/constants.js'
 
-export function Chart(invalidation, links, nodes) {
+export function Chart(invalidation, links, nodes, details) {
+  console.log('CHARTJS args', arguments)
   if (links === null) links = {}
   if (nodes === null) nodes = {}
 
@@ -68,16 +69,17 @@ export function Chart(invalidation, links, nodes) {
   //Circle
   node
     .append('circle')
-    // .attr('fill', (d) =>
-    //   details.covenant && d.group === 'inner' ? '#e4d4b7' : '#fff'
-    // )
-    .attr('fill', (d) => (d.group === 'inner' ? '#e7e5e5' : '#bbbbbb'))
-    .attr('stroke', '#bbb')
-    .attr('stroke-width', (d) =>
-      details.covenant && d.group === 'inner' ? 0 : 1.5
-    )
+    .attr('fill', (d) => (d.group === 'inner' ? '#eaedd4' : '#bbbbbb'))
+    // .attr('stroke', '#c3b252')
     .attr('r', (d) => (d.group === 'inner' ? 80 : radius))
     .attr('cx', (i) => 200 * i + 1)
+    .attr('fill', (d) =>
+      details.covenant && d.group === 'inner' ? '#e6d6a8' : '#ddd4bd'
+    )
+    .attr('stroke-width', (d) => (details.god && d.group === 'inner' ? 10 : 0))
+    .attr('stroke', (d) =>
+      details.god && d.group === 'inner' ? '#3baa51' : '#ffdba5'
+    )
 
   const innerPerson = node
     .filter((d) => d.group === 'inner')

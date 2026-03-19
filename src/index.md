@@ -67,7 +67,6 @@ function toggleLinkProperty(prop, link, e) {
 }
 
 function saveLinksToLocalStorage() {
-  console.log('im being called, boss')
   let linksForSave = initializeLinks(people.value, links.value)
   links.value = linksForSave
   localStorage.setItem('links', JSON.stringify(linksForSave))
@@ -112,10 +111,12 @@ const fam = view(
   })
 )
 
-const covenantAndGod = view(
+const detailsFromStorage = JSON.parse(localStorage.getItem('details'))
+console.log('detailsfromstorage', detailsFromStorage)
+const details = view(
   Inputs.form({
-    covenant: Inputs.toggle({ label: 'Covenant', value: false }),
-    god: Inputs.toggle({ label: 'God', value: false }),
+    covenant: Inputs.toggle({ label: 'Covenant', value: detailsFromStorage?.covenant || false }),
+    god: Inputs.toggle({ label: 'God', value: detailsFromStorage?.god || false }),
   })
 )
 ```
@@ -127,13 +128,43 @@ function savePeople() {
   let formatted = formatDataFromTextInput(fam)
   updatePeople(flatten(formatted))
   localStorage.setItem('fam', JSON.stringify(formatted))
-  localStorage.setItem('extraData', JSON.stringify(covenantAndGod))
+  localStorage.setItem('details', JSON.stringify(details))
 }
 
 function Save() {
+  function handleSave(e) {
+    savePeople()
+    const tooltip = e.currentTarget.parentElement.querySelector('.tooltip')
+    tooltip.classList.add('visible')
+    setTimeout(() => tooltip.classList.remove('visible'), 2000)
+  }
+
   return html`
-    <div>
-      <button onclick=${savePeople}>Save</button>
+    <style>
+      .save-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+      .tooltip {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 12px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+      .tooltip.visible {
+        opacity: 1;
+      }
+    </style>
+    <div class="save-wrapper">
+      <button onclick=${handleSave}>Save</button>
+      <div class="tooltip">Saved!</div>
     </div>
   `
 }
@@ -213,7 +244,7 @@ ${saveLinks()}
 ```
 
 ```js
-const displayChart = Chart(invalidation, links, people, covenantAndGod)
+const displayChart = Chart(invalidation, links, people, details)
 display(displayChart)
 ```
 

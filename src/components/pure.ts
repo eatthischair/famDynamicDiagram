@@ -6,11 +6,11 @@ export function renderLinksForm(links) {
   })
 }
 
-export const emptyObj = {
-  inner: '',
-  middle: '',
-  outer: '',
-}
+// export const emptyObj = {
+//   inner: '',
+//   middle: '',
+//   outer: '',
+// }
 
 export function shapeData(link) {
   return {
@@ -22,10 +22,10 @@ export function shapeData(link) {
   }
 }
 
-export function formatData(fam) {
-  //for now this is fine. as long as shitty data isnt somehow saved to storage
-  return fam
-}
+// export function formatData(fam) {
+//   //for now this is fine. as long as shitty data isnt somehow saved to storage
+//   return fam
+// }
 
 export function formatInner(str) {
   let alreadyFormatted = str.includes('&')
@@ -84,39 +84,8 @@ export function flatten(people) {
   //awful but it works
   return res
 }
-// export function shapeLinksForSave(links) {
-//   console.log('shapelinksforsave', links)
-//   //remove coordinate data so d3 can remake on load
-//   //for now
-
-//   let newLinks = links.map((link) => {
-//     return makeLinkObj(link)
-//   })
-
-//   return newLinks
-// }
-
-// export function makeLinkObj(link) {
-//   //remove all d3 related values
-//   let newLink = {
-//     boundary: link.boundary,
-//     quality: link.quality,
-//     reconsider: link.reconsider,
-//     source: {
-//       name: link.source.name,
-//       group: link.source.group,
-//     },
-//     target: {
-//       name: link.target.name,
-//       group: link.target.group,
-//     },
-//   }
-//   console.log('newlink', newLink)
-//   return newLink
-// }
 
 export function linkFromSave(sourceName, targetName, savedLinkData) {
-  console.log('LINKFROMSAVE', arguments)
   if (!savedLinkData) return
 
   for (let i = 0; i < savedLinkData.length; i++) {
@@ -124,15 +93,13 @@ export function linkFromSave(sourceName, targetName, savedLinkData) {
     let curSourceName = cur.source.name
     let curTargetName = cur.target.name
     if (sourceName === curSourceName && targetName === curTargetName) {
-      console.log('found right obj boss', cur)
       //found right object
       return cur
     }
   }
 }
-export function initializeLinks(people, savedLinkData) {
-  console.log('initializeLinks', people, savedLinkData)
 
+export function initializeLinks(people, savedLinkData) {
   if (people === null) {
     return null
   }
@@ -163,12 +130,15 @@ export function initializeLinks(people, savedLinkData) {
     }
   }
 
+  let s = null
+  if (savedLinkData) s = savedLinkData[0]
+  //inner node is always the first one in the list
   data.unshift({
     source: { name: parents[0], group: 'inner' }, // name of first inner circle
     target: { name: parents[1], group: 'inner' }, // name of second inner circle
-    reconsider: false,
-    quality: false,
-    boundary: false,
+    reconsider: s?.reconsider || false,
+    quality: s?.quality || false,
+    boundary: s?.boundary || false,
   })
   return data
 }
