@@ -5,25 +5,42 @@ import { Chart } from './components/Chart.js'
 import {
   formatData,
   renderButtonText,
-  initializeLinks,
+  renderLinks,
   flatten,
   formatDataFromTextInput,
   shapeLinksForSave,
+  clear,
+  clearStorage,
 } from './components/pure.js'
 import { Generators } from 'observablehq:stdlib'
+import { html } from 'npm:htl'
 ```
 
 ```js
+//State
 let savedLinkData = JSON.parse(localStorage.getItem('links'))
-
 let people = Mutable(flatten(JSON.parse(localStorage.getItem('fam'))))
-let links = Mutable(initializeLinks(people.value, savedLinkData))
+let links = Mutable(renderLinks(people.value, savedLinkData))
 
-function updatePeople(ppl) {
-  people.value = ppl
-  let newLinks = initializeLinks(ppl, savedLinkData)
+function savePeople() {
+  let formatted = formatDataFromTextInput(fam)
+  let nodes = flatten(formatted)
+  let newLinks = renderLinks(nodes, savedLinkData)
+
+  people.value = nodes
   links.value = newLinks
+
   localStorage.setItem('links', JSON.stringify(newLinks))
+  localStorage.setItem('fam', JSON.stringify(formatted))
+  localStorage.setItem('details', JSON.stringify(details))
+}
+
+function Save() {
+  return html`
+    <div>
+      <button onclick=${savePeople}>Save</button>
+    </div>
+  `
 }
 
 function linksIntoString(links) {
@@ -67,7 +84,7 @@ function toggleLinkProperty(prop, link, e) {
 }
 
 function saveLinksToLocalStorage() {
-  let linksForSave = initializeLinks(people.value, links.value)
+  let linksForSave = renderLinks(people.value, links.value)
   links.value = linksForSave
   localStorage.setItem('links', JSON.stringify(linksForSave))
 }
@@ -112,7 +129,6 @@ const fam = view(
 )
 
 const detailsFromStorage = JSON.parse(localStorage.getItem('details'))
-console.log('detailsfromstorage', detailsFromStorage)
 const details = view(
   Inputs.form({
     covenant: Inputs.toggle({ label: 'Covenant', value: detailsFromStorage?.covenant || false }),
@@ -122,42 +138,6 @@ const details = view(
 ```
 
 When you are finished, click **Save**
-
-```js
-function savePeople() {
-  let formatted = formatDataFromTextInput(fam)
-  updatePeople(flatten(formatted))
-  localStorage.setItem('fam', JSON.stringify(formatted))
-  localStorage.setItem('details', JSON.stringify(details))
-}
-
-function Save() {
-  function handleSave(e) {
-    savePeople()
-    const tooltip = e.currentTarget.parentElement.querySelector('.tooltip')
-    tooltip.classList.add('visible')
-    setTimeout(() => tooltip.classList.remove('visible'), 2000)
-  }
-
-  return html`
-    <div>
-      <button onclick=${handleSave}>Save</button>
-    </div>
-  `
-}
-
-function clear() {
-  window.localStorage.clear()
-}
-
-function clearStorage() {
-  return html`
-    <div>
-      <button onclick=${clear}>Clear</button>
-    </div>
-  `
-}
-```
 
   <div>
     ${Save()}
@@ -237,7 +217,7 @@ const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#7ec39a' })
 ```
 
 ```js
-const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#a01c1c' }))
+const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#c36f6f' }))
 ```
 
   </div>

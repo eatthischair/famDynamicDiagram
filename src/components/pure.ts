@@ -1,20 +1,20 @@
 import { html } from 'npm:htl'
 
-export function renderLinksForm(links) {
-  return links.map((link) => {
-    return shapeData(link)
-  })
-}
+// export function renderLinksForm(links) {
+//   return links.map((link) => {
+//     return shapeData(link)
+//   })
+// }
 
-export function shapeData(link) {
-  return {
-    source: link.source.name,
-    target: link.target.name,
-    boundary: link.boundary,
-    reconsider: link.reconsider,
-    quality: link.quality,
-  }
-}
+// export function shapeData(link) {
+//   return {
+//     source: link.source.name,
+//     target: link.target.name,
+//     boundary: link.boundary,
+//     reconsider: link.reconsider,
+//     quality: link.quality,
+//   }
+// }
 
 export function formatInner(str) {
   let alreadyFormatted = str.includes('&')
@@ -82,13 +82,12 @@ export function linkFromSave(sourceName, targetName, savedLinkData) {
     let curSourceName = cur.source.name
     let curTargetName = cur.target.name
     if (sourceName === curSourceName && targetName === curTargetName) {
-      //found right object
       return cur
     }
   }
 }
 
-export function initializeLinks(people, savedLinkData) {
+export function renderLinks(people, savedLinkData) {
   if (people === null) {
     return null
   }
@@ -130,4 +129,16 @@ export function initializeLinks(people, savedLinkData) {
     boundary: s?.boundary || false,
   })
   return data
+}
+
+export function clear() {
+  window.localStorage.clear()
+}
+
+export function clearStorage() {
+  return html`
+    <div>
+      <button onclick=${clear}>Clear</button>
+    </div>
+  `
 }
