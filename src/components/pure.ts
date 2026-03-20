@@ -6,12 +6,6 @@ export function renderLinksForm(links) {
   })
 }
 
-// export const emptyObj = {
-//   inner: '',
-//   middle: '',
-//   outer: '',
-// }
-
 export function shapeData(link) {
   return {
     source: link.source.name,
@@ -21,11 +15,6 @@ export function shapeData(link) {
     quality: link.quality,
   }
 }
-
-// export function formatData(fam) {
-//   //for now this is fine. as long as shitty data isnt somehow saved to storage
-//   return fam
-// }
 
 export function formatInner(str) {
   let alreadyFormatted = str.includes('&')

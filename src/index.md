@@ -140,31 +140,8 @@ function Save() {
   }
 
   return html`
-    <style>
-      .save-wrapper {
-        position: relative;
-        display: inline-block;
-      }
-      .tooltip {
-        position: absolute;
-        bottom: calc(100% + 6px);
-        left: 50%;
-        transform: translateX(-50%);
-        background: #333;
-        color: #fff;
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-size: 12px;
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
-      .tooltip.visible {
-        opacity: 1;
-      }
-    </style>
-    <div class="save-wrapper">
+    <div>
       <button onclick=${handleSave}>Save</button>
-      <div class="tooltip">Saved!</div>
     </div>
   `
 }

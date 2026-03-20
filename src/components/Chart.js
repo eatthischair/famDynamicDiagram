@@ -70,7 +70,6 @@ export function Chart(invalidation, links, nodes, details) {
   node
     .append('circle')
     .attr('fill', (d) => (d.group === 'inner' ? '#eaedd4' : '#bbbbbb'))
-    // .attr('stroke', '#c3b252')
     .attr('r', (d) => (d.group === 'inner' ? 80 : radius))
     .attr('cx', (i) => 200 * i + 1)
     .attr('fill', (d) =>
