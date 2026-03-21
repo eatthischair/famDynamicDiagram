@@ -12,7 +12,6 @@ import {
 } from '/components/constants.js'
 
 export function Chart(invalidation, links, nodes, details) {
-  console.log('CHARTJS args', arguments)
   if (links === null) links = {}
   if (nodes === null) nodes = {}
 
@@ -29,7 +28,7 @@ export function Chart(invalidation, links, nodes, details) {
         .radius(radius + 20)
         .iterations(10)
     )
-    .alphaDecay(0.02)
+    .alphaDecay(0.002)
 
   // Create the container SVG.
   const svg = d3
@@ -66,18 +65,35 @@ export function Chart(invalidation, links, nodes, details) {
     .join('g')
     .call(drag(simulation))
 
+  let colors = [
+    '#d4e9f3',
+    '#e7dcdd',
+    '#dce0ec',
+    '#ebdec9',
+    '#d4e2dc',
+    '#e3e8d1',
+    '#d9eae6',
+  ]
+  let remaining = [...colors]
+
+  function pickRandomColor() {
+    if (remaining.length === 0) remaining = [...colors]
+    let i = Math.floor(Math.random() * remaining.length)
+    return remaining.splice(i, 1)[0]
+  }
   //Circle
   node
     .append('circle')
-    .attr('fill', (d) => (d.group === 'inner' ? '#eaedd4' : '#bbbbbb'))
+    .attr('fill', (d) => (d.group === 'inner' ? '#eaedd4' : '#ACBED8'))
     .attr('r', (d) => (d.group === 'inner' ? 80 : radius))
     .attr('cx', (i) => 200 * i + 1)
+    //DETAILS
     .attr('fill', (d) =>
-      details.covenant && d.group === 'inner' ? '#e6d6a8' : '#ddd4bd'
+      details.covenant && d.group === 'inner' ? '#e6d6a8' : pickRandomColor()
     )
     .attr('stroke-width', (d) => (details.god && d.group === 'inner' ? 10 : 0))
     .attr('stroke', (d) =>
-      details.god && d.group === 'inner' ? '#3baa51' : '#ffdba5'
+      details.god && d.group === 'inner' ? '#33673b' : '#ffdba5'
     )
 
   const innerPerson = node
@@ -99,7 +115,9 @@ export function Chart(invalidation, links, nodes, details) {
   innerPerson
     .append('circle')
     .attr('r', radius)
-    .attr('fill', (_, i) => (i === 0 ? '#989898' : '#c1bdbd'))
+    // .attr('fill', (_, i) => (i === 0 ? '#989898' : '#c1bdbd'))
+    .attr('fill', (_, i) => (i === 0 ? pickRandomColor() : pickRandomColor()))
+
   innerPerson
     .append('text')
     .attr('text-anchor', 'middle')

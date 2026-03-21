@@ -1,27 +1,11 @@
 import { html } from 'npm:htl'
 
-// export function renderLinksForm(links) {
-//   return links.map((link) => {
-//     return shapeData(link)
-//   })
-// }
-
-// export function shapeData(link) {
-//   return {
-//     source: link.source.name,
-//     target: link.target.name,
-//     boundary: link.boundary,
-//     reconsider: link.reconsider,
-//     quality: link.quality,
-//   }
-// }
-
 export function formatInner(str) {
   let alreadyFormatted = str.includes('&')
   if (!alreadyFormatted) {
     str = str.trim()
     str = str.split(',')
-    str = `${str[0].trim()} & ${str[1].trim()}`
+    str = `${cap(str[0].trim())} & ${cap(str[1].trim())}`
   }
   return [str] //always return array bc always string coming from input
 }
@@ -36,10 +20,10 @@ export function formatDataFromTextInput(fam) {
       res.inner = formatInner(cur)
     } else if (cur.includes(',')) {
       //i.e. there are multiple elements in the string
-      res[group] = cur.split(',').map((p) => p.trim())
+      res[group] = cur.split(',').map((p) => cap(p.trim()))
     } else {
       //else bc what if only one item
-      res[group] = [cur]
+      res[group] = [cap(cur)]
     }
   }
   return res
@@ -60,7 +44,7 @@ export function flatten(people) {
   let aids = Object.entries(people).flatMap(([group, person]) => {
     let isEmpty = person[0] === '' // person = [''];
     if (!isEmpty) {
-      return person.map((name) => ({ name: name, group: group }))
+      return person.map((name) => ({ name: cap(name), group: group }))
     }
   })
 
@@ -141,4 +125,8 @@ export function clearStorage() {
       <button onclick=${clear}>Clear</button>
     </div>
   `
+}
+
+export function cap(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }

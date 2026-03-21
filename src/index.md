@@ -1,3 +1,8 @@
+---
+theme: [glacier]
+style: custom-style.css
+---
+
 # Family Dynamic Diagram
 
 ```js
@@ -11,9 +16,17 @@ import {
   shapeLinksForSave,
   clear,
   clearStorage,
+  cap,
 } from './components/pure.js'
 import { Generators } from 'observablehq:stdlib'
 import { html } from 'npm:htl'
+```
+
+```js
+const link = document.createElement('link')
+link.rel = 'stylesheet'
+link.href = '/styles.css' // make sure path is correct
+document.head.appendChild(link)
 ```
 
 ```js
@@ -36,9 +49,16 @@ function savePeople() {
 }
 
 function Save() {
+  function handleSavePeople(e) {
+    savePeople()
+    const tooltip = e.currentTarget.parentElement.querySelector('.tooltip')
+    tooltip.classList.add('visible')
+    setTimeout(() => tooltip.classList.remove('visible'), 2000)
+  }
   return html`
-    <div>
-      <button onclick=${savePeople}>Save</button>
+    <div class="save-wrapper">
+      <button class="save" onclick=${handleSavePeople}>Save</button>
+      <div class="tooltip">Saved!</div>
     </div>
   `
 }
@@ -50,10 +70,10 @@ function linksIntoString(links) {
     const z = renderToggleButton(link, 'reconsider')
     return html`
       <div>
-        Relation between
-        <span>${link.source.name}</span>
+        The relationship between
+        <span>${cap(link.source.name)}</span>
         and
-        <span>${link.target.name}</span>
+        <span>${cap(link.target.name)}</span>
         is ${y} the boundary is ${x} and the communication is ${z}
       </div>
     `
@@ -90,9 +110,17 @@ function saveLinksToLocalStorage() {
 }
 
 function saveLinks() {
+  function handleSave(e) {
+    saveLinksToLocalStorage()
+    const tooltip = e.currentTarget.parentElement.querySelector('.tooltip')
+    tooltip.classList.add('visible')
+    setTimeout(() => tooltip.classList.remove('visible'), 2000)
+  }
+
   return html`
-    <div>
-      <button onclick=${saveLinksToLocalStorage}>Save</button>
+    <div class="save-wrapper">
+      <button class="save" onclick=${handleSave}>Save</button>
+      <div class="tooltip">Saved!</div>
     </div>
   `
 }
@@ -112,17 +140,17 @@ const fam = view(
   Inputs.form({
     inner: Inputs.text({
       label: 'Couple',
-      placeholder: 'Name of parents',
+      placeholder: 'Jane, John',
       value: famNames?.inner || '',
     }),
     middle: Inputs.text({
       label: 'Kids',
-      placeholder: 'Name of children',
+      placeholder: 'Michael, Janie etc.',
       value: famNames?.middle || '',
     }),
     outer: Inputs.text({
       label: 'Peripheral',
-      placeholder: 'Name of peripheral family',
+      placeholder: 'Rob, Nancy etc.',
       value: famNames?.outer || '',
     }),
   })
@@ -137,12 +165,7 @@ const details = view(
 )
 ```
 
-When you are finished, click **Save**
-
-  <div>
-    ${Save()}
-
-  </div>
+When you are finished, click ${Save()}
 
   <div>
    ${clearStorage()}
@@ -185,14 +208,16 @@ When you are finished, click **Save**
   </div>
   </details>
 <div>
-${saveLinks()}
+
+When you are finished, click ${saveLinks()}
 
 </div>
-</details>
 
 </details>
 
-<div class="card grid-row-span-2 grid-cols-span-2">
+</details>
+
+<div class="card grid-row-span-2 grid-cols-span-2 chart">
 
 ```js
 {
@@ -213,11 +238,11 @@ display(displayChart)
   <div class="card">
 
 ```js
-const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#7ec39a' }))
+const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#6CC56A' }))
 ```
 
 ```js
-const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#c36f6f' }))
+const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#DA2C38' }))
 ```
 
   </div>

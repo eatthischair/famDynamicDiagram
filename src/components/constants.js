@@ -1,6 +1,6 @@
 import * as d3 from 'npm:d3'
 
-export const mult = 0.5
+export const mult = 0.6
 export const height = Math.round(window.screen.height * mult)
 export const width = Math.round(window.screen.width * mult)
 
