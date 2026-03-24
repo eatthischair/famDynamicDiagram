@@ -1,16 +1,16 @@
 import { html } from 'npm:htl'
 
-export function formatInner(str) {
+export function formatInner(str: string): string[] {
   let alreadyFormatted = str.includes('&')
   if (!alreadyFormatted) {
     str = str.trim()
     str = str.split(',')
     str = `${cap(str[0].trim())} & ${cap(str[1].trim())}`
   }
-  return [str] //always return array bc always string coming from input
+  return [str]
 }
 
-export function formatDataFromTextInput(fam) {
+export function formatDataFromTextInput(fam: Input): fam {
   let res = {}
   //from text input obj to an array of string
   for (const group in fam) {
@@ -27,16 +27,13 @@ export function formatDataFromTextInput(fam) {
     }
   }
   return res
-  //circuitous way to turn delimited strings in a array. there must be something better i s2g
 }
 
-export function renderButtonText(prop) {
+export function renderButtonText(prop: boolean) {
   return prop ? 'good' : 'bad'
 }
 
-export function flatten(people) {
-  //takes input obj and turns it into nodes. an array of objects like so [{name:johmmy group: inner}, {name: binge, group: outer}]
-  //in memory: stored as an array of strings, but must be visible in text boxes as strings with comma
+export function flatten(people: fam): Node[] {
   if (people === null) {
     return null
   }
@@ -58,7 +55,11 @@ export function flatten(people) {
   return res
 }
 
-export function linkFromSave(sourceName, targetName, savedLinkData) {
+export function linkFromSave(
+  sourceName: string,
+  targetName: string,
+  savedLinkData: Link[]
+): Link {
   if (!savedLinkData) return
 
   for (let i = 0; i < savedLinkData.length; i++) {
@@ -71,7 +72,7 @@ export function linkFromSave(sourceName, targetName, savedLinkData) {
   }
 }
 
-export function renderLinks(people, savedLinkData) {
+export function renderLinks(people: Node[], savedLinkData: Link[]): Link[] {
   if (people === null) {
     return null
   }
@@ -104,7 +105,7 @@ export function renderLinks(people, savedLinkData) {
 
   let s = null
   if (savedLinkData) s = savedLinkData[0]
-  //inner node is always the first one in the list
+  //inner link is always the first one in the list
   data.unshift({
     source: { name: parents[0], group: 'inner' }, // name of first inner circle
     target: { name: parents[1], group: 'inner' }, // name of second inner circle
@@ -127,6 +128,6 @@ export function clearStorage() {
   `
 }
 
-export function cap(str) {
+export function cap(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }

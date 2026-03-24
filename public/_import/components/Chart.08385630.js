@@ -1,6 +1,6 @@
-import * as Plot from 'npm:@observablehq/plot'
-import * as d3 from 'npm:d3'
-import _ from 'npm:lodash'
+import * as Plot from "../../_npm/@observablehq/plot@0.6.17/a96a6bbb.js"
+import * as d3 from "../../_npm/d3@7.9.0/66d82917.js"
+import _ from "../../_npm/lodash@4.17.23/dde5ae91.js"
 import {
   height,
   width,
@@ -9,7 +9,7 @@ import {
   sortPeople,
   drag,
   hardCodedArcs,
-} from '/components/constants.js'
+} from "./constants.a0205140.js"
 
 export function Chart(invalidation, links, nodes, details) {
   if (links === null) links = {}

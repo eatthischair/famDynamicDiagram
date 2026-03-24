@@ -1,0 +1,111 @@
+import { html } from "../../_npm/htl@0.3.1/72f4716c.js";
+export function formatInner(str) {
+  let alreadyFormatted = str.includes("&");
+  if (!alreadyFormatted) {
+    str = str.trim();
+    str = str.split(",");
+    str = `${cap(str[0].trim())} & ${cap(str[1].trim())}`;
+  }
+  return [str];
+}
+export function formatDataFromTextInput(fam) {
+  let res = {};
+  for (const group in fam) {
+    let cur = fam[group];
+    if (group === "inner") {
+      res.inner = formatInner(cur);
+    } else if (cur.includes(",")) {
+      res[group] = cur.split(",").map((p) => cap(p.trim()));
+    } else {
+      res[group] = [cap(cur)];
+    }
+  }
+  return res;
+}
+export function renderButtonText(prop) {
+  return prop ? "good" : "bad";
+}
+export function flatten(people) {
+  if (people === null) {
+    return null;
+  }
+  let aids = Object.entries(people).flatMap(([group, person]) => {
+    let isEmpty = person[0] === "";
+    if (!isEmpty) {
+      return person.map((name) => ({ name: cap(name), group }));
+    }
+  });
+  let res = [];
+  for (let i = 0; i < aids.length; i++) {
+    if (aids[i]) {
+      res.push(aids[i]);
+    }
+  }
+  return res;
+}
+export function linkFromSave(sourceName, targetName, savedLinkData) {
+  if (!savedLinkData)
+    return;
+  for (let i = 0; i < savedLinkData.length; i++) {
+    let cur = savedLinkData[i];
+    let curSourceName = cur.source.name;
+    let curTargetName = cur.target.name;
+    if (sourceName === curSourceName && targetName === curTargetName) {
+      return cur;
+    }
+  }
+}
+export function renderLinks(people, savedLinkData) {
+  if (people === null) {
+    return null;
+  }
+  let data = [];
+  for (let i = 0; i < people.length; i++) {
+    for (let j = i + 1; j < people.length; j++) {
+      let savedLink = linkFromSave(
+        people[i].name,
+        people[j].name,
+        savedLinkData
+      );
+      data.push({
+        source: people[i],
+        target: people[j],
+        reconsider: savedLink?.reconsider || false,
+        quality: savedLink?.quality || false,
+        boundary: savedLink?.boundary || false
+      });
+    }
+  }
+  let parents;
+  for (var node of people) {
+    if (node.group === "inner") {
+      parents = node.name.split("&").map((p) => p.trim());
+    }
+  }
+  let s = null;
+  if (savedLinkData)
+    s = savedLinkData[0];
+  data.unshift({
+    source: { name: parents[0], group: "inner" },
+    // name of first inner circle
+    target: { name: parents[1], group: "inner" },
+    // name of second inner circle
+    reconsider: s?.reconsider || false,
+    quality: s?.quality || false,
+    boundary: s?.boundary || false
+  });
+  return data;
+}
+export function clear() {
+  window.localStorage.clear();
+}
+export function clearStorage() {
+  return html`
+    <div>
+      <button onclick=${clear}>Clear</button>
+    </div>
+  `;
+}
+export function cap(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

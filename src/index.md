@@ -23,13 +23,6 @@ import { html } from 'npm:htl'
 ```
 
 ```js
-const link = document.createElement('link')
-link.rel = 'stylesheet'
-link.href = '/styles.css' // make sure path is correct
-document.head.appendChild(link)
-```
-
-```js
 //State
 let savedLinkData = JSON.parse(localStorage.getItem('links'))
 let people = Mutable(flatten(JSON.parse(localStorage.getItem('fam'))))
