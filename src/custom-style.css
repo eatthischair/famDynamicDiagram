@@ -83,3 +83,20 @@ css.slide { display: none; }
 .slide.active { display: block; }
 CLAUDE code on tutorial
 */
+
+.chart {
+  /* border-color: red; */
+  margin-top: 5px;
+  /* margin-left: 20%; */
+  height:
+  /* width: 100vh; */
+  padding: 20px;
+}
+
+.parent {
+  border-color: red;
+
+  /* display: grid; */
+  /* place-items: center; */
+  height: 100vh;
+}

@@ -39,7 +39,7 @@ export function flatten(people: fam): Node[] {
   }
 
   let aids = Object.entries(people).flatMap(([group, person]) => {
-    let isEmpty = person[0] === '' // person = [''];
+    let isEmpty = person[0] === ''
     if (!isEmpty) {
       return person.map((name) => ({ name: cap(name), group: group }))
     }

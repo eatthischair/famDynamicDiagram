@@ -119,6 +119,7 @@ function saveLinks() {
 }
 ```
 
+<div class="parent">
  <details> <summary>1. Family Input </summary>
    <div class="card">
 
@@ -235,9 +236,11 @@ const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#6CC56A' })
 ```
 
 ```js
-const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#DA2C38' }))
+const badColors = view(Inputs.color({ label: 'Bad Colors', value: '#e1848a' }))
 ```
 
   </div>
   </details>
+
+</div>
 </div>
