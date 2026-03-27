@@ -5,6 +5,8 @@ style: custom-style.css
 
 # Family Dynamic Diagram
 
+#### An interactive graph of family relationships
+
 ```js
 import { Chart } from './components/Chart.js'
 import {
@@ -62,7 +64,7 @@ function linksIntoString(links) {
     const x = renderToggleButton(link, 'boundary')
     const z = renderToggleButton(link, 'reconsider')
     return html`
-      <div>
+      <div class="line">
         The relationship between
         <span>${cap(link.source.name)}</span>
         and
@@ -77,7 +79,8 @@ function renderToggleButton(link, prop) {
   const value = link[prop]
   return html`
     <button
-      style="color:${value ? 'green' : 'red'}"
+      class="toggle-button"
+      style="color:${value ? 'green' : 'red'}; background: var(--background);"
       onclick=${(e) => toggleLinkProperty(prop, link, e)}
     >
       ${renderButtonText(value)}
@@ -119,8 +122,17 @@ function saveLinks() {
 }
 ```
 
+<details >
+  <summary><strong>How to use</strong></summary>
+  <ol class="instructions">
+    <li>Enter family members</li>
+    <li>Define relationships</li>
+    <li>View your diagram</li>
+  </ol>
+</details>
+
 <div class="parent">
- <details> <summary>1. Family Input </summary>
+ <details> <summary>Family Input</summary>
    <div class="card">
 
 Input the names of your family members, **separated by commas**
@@ -171,14 +183,14 @@ When you are finished, click ${Save()}
 
 <details>
   <summary>
-  2. Relations
+  Relations
   </summary>
 
   <details>
   <summary>
   Inner
   </summary>
-  <div>
+  <div class="cardlike">
    ${linksIntoString(links.filter(item => item.source.group === 'inner')).map(item => html`<span>${item}</span>`)}
 
   </div>
@@ -188,7 +200,7 @@ When you are finished, click ${Save()}
   <summary>
   Middle
   </summary>
-  <div>
+  <div class="cardlike">
    ${linksIntoString(links.filter(item => item.source.group === 'middle')).map(item => html`<span>${item}</span>`)}
   </div>
   </details>
@@ -197,7 +209,7 @@ When you are finished, click ${Save()}
   <summary>
   Outer
   </summary>
-  <div>
+  <div class="cardlike">
    ${linksIntoString(links.filter(item => item.source.group === 'outer')).map(item => html`<span>${item}</span>`)}
   </div>
   </details>
@@ -221,7 +233,7 @@ When you are finished, click ${saveLinks()}
 
 ```js
 const displayChart = Chart(invalidation, links, people, details)
-display(displayChart)
+if (links && people) display(displayChart)
 ```
 
 <details>

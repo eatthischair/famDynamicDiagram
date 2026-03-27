@@ -122,7 +122,7 @@ export function clear() {
 
 export function clearStorage() {
   return html`
-    <div>
+    <div class="save-wrapper">
       <button onclick=${clear}>Clear</button>
     </div>
   `

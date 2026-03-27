@@ -10,6 +10,7 @@ import {
   drag,
   hardCodedArcs,
 } from '/components/constants.js'
+import { html } from 'npm:htl'
 
 export function Chart(invalidation, links, nodes, details) {
   if (links === null) links = {}
@@ -19,14 +20,17 @@ export function Chart(invalidation, links, nodes, details) {
     .forceSimulation(nodes)
     .force(
       'radial',
-      d3.forceRadial((d, i) => sortPeople(d), 0, -(height / 2) * 0.6) //??
+      d3
+        .forceRadial((d, i) => sortPeople(d), 0, -(height / 2) * 0.6)
+        .strength(0.05)
     )
     .force(
       'charge',
       d3
         .forceCollide()
-        .radius(radius + 20)
-        .iterations(10)
+        .strength(0.5) // default is 1
+        .radius(radius + 10)
+        .iterations(20)
     )
     .alphaDecay(0.002)
 
@@ -35,8 +39,8 @@ export function Chart(invalidation, links, nodes, details) {
     .create('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', [-width / 2, -height / 2, width, height])
-    .attr('style', 'max-width: 100%; height: auto;')
+    .attr('viewBox', [-width / 2 - 65, -height / 2 - 50, width - 65, height])
+  // .attr('style', 'max-width: 100%; height: auto;')
 
   //ARCs
   svg
