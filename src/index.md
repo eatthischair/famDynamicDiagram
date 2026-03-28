@@ -80,7 +80,7 @@ function renderToggleButton(link, prop) {
   return html`
     <button
       class="toggle-button"
-      style="color:${value ? 'green' : 'red'}; background: var(--background);"
+      style="color:${value ? 'green' : 'red'};"
       onclick=${(e) => toggleLinkProperty(prop, link, e)}
     >
       ${renderButtonText(value)}
@@ -185,12 +185,13 @@ When you are finished, click ${Save()}
   <summary>
   Relations
   </summary>
+<strong>Define your families' relationships</strong>
 
   <details>
   <summary>
   Inner
   </summary>
-  <div class="cardlike">
+  <div class="card">
    ${linksIntoString(links.filter(item => item.source.group === 'inner')).map(item => html`<span>${item}</span>`)}
 
   </div>
@@ -200,7 +201,7 @@ When you are finished, click ${Save()}
   <summary>
   Middle
   </summary>
-  <div class="cardlike">
+  <div class="card">
    ${linksIntoString(links.filter(item => item.source.group === 'middle')).map(item => html`<span>${item}</span>`)}
   </div>
   </details>
@@ -209,7 +210,7 @@ When you are finished, click ${Save()}
   <summary>
   Outer
   </summary>
-  <div class="cardlike">
+  <div class="card">
    ${linksIntoString(links.filter(item => item.source.group === 'outer')).map(item => html`<span>${item}</span>`)}
   </div>
   </details>
@@ -223,7 +224,19 @@ When you are finished, click ${saveLinks()}
 
 </details>
 
-<div class="card grid-row-span-2 grid-cols-span-2 chart">
+```js
+if (links && people) {
+  document.body.classList.add('has-data')
+} else {
+  document.body.classList.remove('has-data')
+}
+```
+
+<div class="empty-state">
+  No data yet — add your family to begin
+</div>
+
+<div class="card grid-row-span-2 grid-cols-span-2 chart color-options">
 
 ```js
 {
@@ -236,12 +249,12 @@ const displayChart = Chart(invalidation, links, people, details)
 if (links && people) display(displayChart)
 ```
 
-<details>
+<details class="color-options">
   <summary>
   Color Options
   </summary>
 
-  <div class="card">
+  <div>
 
 ```js
 const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#6CC56A' }))
