@@ -97,7 +97,7 @@ export function Chart(invalidation, links, nodes, details) {
     )
     .attr('stroke-width', (d) => (details.god && d.group === 'inner' ? 10 : 0))
     .attr('stroke', (d) =>
-      details.god && d.group === 'inner' ? '#33673b' : '#ffdba5'
+      details.god && d.group === 'inner' ? '#FFD700' : '#ffdba5'
     )
 
   const innerPerson = node
@@ -114,7 +114,7 @@ export function Chart(invalidation, links, nodes, details) {
     .append('g')
     .attr(
       'transform',
-      (_, i) => `translate(${i === 0 ? -(80 - radius) : 80 - radius},0)`
+      (_, i) => `translate(${i === 0 ? -(70 - radius) : 70 - radius},0)`
     )
   innerPerson
     .append('circle')
@@ -159,7 +159,7 @@ export function Chart(invalidation, links, nodes, details) {
         .attr('stroke-width', 2)
         .attr('fill', 'none')
         .attr('d', `M${-(80 - radius - 30)},0 L${80 - radius - 30},0`)
-        .attr('stroke', (d) => (links[0].quality ? goodColor : badColor))
+        // .attr('stroke', (d) => (links[0].quality ? goodColor : badColor))
         .attr('stroke-width', (d) => (links[0].reconsider ? 2.5 : 8))
         .attr('stroke-dasharray', (d) => (links[0].boundary ? '3,3' : 'none'))
     },

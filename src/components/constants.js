@@ -11,7 +11,7 @@ export const hardCodedArcs = [
 ]
 
 export const radius = 30.5
-export const radii = [0, 200, 375]
+export const radii = [0, 200, 425]
 export const details = {
   covenant: true,
   god: true,
