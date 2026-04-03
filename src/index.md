@@ -62,20 +62,20 @@ function linksIntoString(links) {
   return links.map((link, i) => {
     const y = renderToggleButton(link, 'quality')
     const x = renderToggleButton(link, 'boundary')
-    const z = renderToggleButton(link, 'reconsider')
+    const z = renderToggleButton(link, 'reconsider', true)
     return html`
       <div class="line">
-        The relationship between
+        The communication between
         <span>${cap(link.source.name)}</span>
         and
         <span>${cap(link.target.name)}</span>
-        is ${y} the boundary is ${x} and the communication is ${z}
+        is ${z} ${y} and the boundary is ${x}
       </div>
     `
   })
 }
 
-function renderToggleButton(link, prop) {
+function renderToggleButton(link, prop, edgeCase) {
   const value = link[prop]
   return html`
     <button
@@ -83,7 +83,7 @@ function renderToggleButton(link, prop) {
       style="color:${value ? 'green' : 'red'};"
       onclick=${(e) => toggleLinkProperty(prop, link, e)}
     >
-      ${renderButtonText(value)}
+      ${renderButtonText(value, edgeCase)}
     </button>
   `
 }
@@ -132,7 +132,7 @@ function saveLinks() {
 </details>
 
 <div class="parent">
- <details> <summary>Family Input</summary>
+ <details> <summary>Step 1</summary>
    <div class="card">
 
 Input the names of your family members, **separated by commas**
@@ -165,8 +165,20 @@ const fam = view(
 const detailsFromStorage = JSON.parse(localStorage.getItem('details'))
 const details = view(
   Inputs.form({
-    covenant: Inputs.toggle({ label: 'Covenant', value: detailsFromStorage?.covenant || false }),
-    god: Inputs.toggle({ label: 'God', value: detailsFromStorage?.god || false }),
+    chaos: Inputs.text({
+      label: 'Who in your family is causing the most chaos?',
+      value: detailsFromStorage?.chaos || '',
+    }),
+    covenant: Inputs.toggle({
+      label: 'Marriage covenant',
+      value: detailsFromStorage?.covenant || false,
+    }),
+    god: Inputs.toggle({ label: 'God covenant', value: detailsFromStorage?.god || false }),
+    alignment: Inputs.radio(['25%', '50%', '75%'], {
+      value: detailsFromStorage?.alignment || null,
+      unique: true,
+      label: 'Degree of alignment:',
+    }),
   })
 )
 ```
@@ -183,7 +195,7 @@ When you are finished, click ${Save()}
 
 <details>
   <summary>
-  Relations
+  Step 2
   </summary>
 <strong>Define your families' relationships</strong>
 
@@ -257,7 +269,7 @@ if (links && people) display(displayChart)
   <div>
 
 ```js
-const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#6CC56A' }))
+const goodColors = view(Inputs.color({ label: 'Good Colors', value: '#212421' }))
 ```
 
 ```js

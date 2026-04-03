@@ -1,14 +1,24 @@
 import * as d3 from 'npm:d3'
 
-export const mult = 0.6
+export const mult = 1
 export const height = Math.round(window.screen.height * mult)
 export const width = Math.round(window.screen.width * mult)
 
-export const hardCodedArcs = [
-  `M -300,${-(height / 2) * mult}  A 20,20 0,0,0 100,${-(height / 2) * mult}`,
-  `M -300,${-(height / 2) * mult}  A 20,20 0,0,0 300,${-(height / 2) * mult}`,
-  `M -500,${-(height / 2) * mult}   A 20,20 0,0,0 500,${-(height / 2) * mult}`,
+export const colors = [
+  '#d4e9f3',
+  '#e7dcdd',
+  '#dce0ec',
+  '#ebdec9',
+  '#d4e2dc',
+  '#e3e8d1',
+  '#d9eae6',
 ]
+
+// export const hardCodedArcs = [
+//   `M -300,${-(height / 2) * mult}  A 20,20 0,0,0 100,${-(height / 2) * mult}`,
+//   `M -300,${-(height / 2) * mult}  A 20,20 0,0,0 300,${-(height / 2) * mult}`,
+//   `M -500,${-(height / 2) * mult}   A 20,20 0,0,0 500,${-(height / 2) * mult}`,
+// ]
 
 export const radius = 30.5
 export const radii = [0, 200, 425]

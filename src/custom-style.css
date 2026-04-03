@@ -148,18 +148,14 @@ input {
 
 .empty-state {
   display: flex; /* default visible */
-
   height: 100%;
   width: 100%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   text-align: center;
   font-weight: 600; /* semi-bold */
   font-size: 16px;
-
   padding-top: 1rem;
   color: #666; /* slightly muted but distinct */
 }

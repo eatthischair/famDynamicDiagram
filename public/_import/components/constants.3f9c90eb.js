@@ -5,13 +5,13 @@ export const height = Math.round(window.screen.height * mult)
 export const width = Math.round(window.screen.width * mult)
 
 export const hardCodedArcs = [
-  `M -100,${-(height / 2) * mult}  A 20,20 0,0,0 100,${-(height / 2) * mult}`,
+  `M -300,${-(height / 2) * mult}  A 20,20 0,0,0 100,${-(height / 2) * mult}`,
   `M -300,${-(height / 2) * mult}  A 20,20 0,0,0 300,${-(height / 2) * mult}`,
   `M -500,${-(height / 2) * mult}   A 20,20 0,0,0 500,${-(height / 2) * mult}`,
 ]
 
 export const radius = 30.5
-export const radii = [0, 200, 375]
+export const radii = [0, 200, 425]
 export const details = {
   covenant: true,
   god: true,

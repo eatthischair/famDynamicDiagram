@@ -9,7 +9,9 @@ import {
   sortPeople,
   drag,
   hardCodedArcs,
-} from "./constants.a0205140.js"
+} from "./constants.3f9c90eb.js"
+import { html } from "../../_npm/htl@0.3.1/72f4716c.js"
+import { determineAlignment } from "./pure.5edca992.ts"
 
 export function Chart(invalidation, links, nodes, details) {
   if (links === null) links = {}
@@ -19,24 +21,27 @@ export function Chart(invalidation, links, nodes, details) {
     .forceSimulation(nodes)
     .force(
       'radial',
-      d3.forceRadial((d, i) => sortPeople(d), 0, -(height / 2) * 0.6) //??
+      d3
+        .forceRadial((d, i) => sortPeople(d), 0, -(height / 2) * 0.6)
+        .strength(0.05)
     )
     .force(
       'charge',
       d3
         .forceCollide()
-        .radius(radius + 20)
-        .iterations(10)
+        .strength(0.5) // default is 1
+        .radius(radius + 10)
+        .iterations(20)
     )
     .alphaDecay(0.002)
 
-  // Create the container SVG.
+  // Create container SVG.
   const svg = d3
     .create('svg')
     .attr('width', width)
     .attr('height', height)
-    .attr('viewBox', [-width / 2, -height / 2, width, height])
-    .attr('style', 'max-width: 100%; height: auto;')
+    .attr('viewBox', [-width / 2 - 65, -height / 2 - 50, width - 65, height])
+  // .attr('style', 'max-width: 100%; height: auto;')
 
   //ARCs
   svg
@@ -48,7 +53,7 @@ export function Chart(invalidation, links, nodes, details) {
     .join('path')
     .attr('d', (d, i) => hardCodedArcs[i])
 
-  // Append lines
+  //lines
   const link = svg
     .append('g')
     .selectAll('path')
@@ -57,7 +62,7 @@ export function Chart(invalidation, links, nodes, details) {
     .attr('stroke-width', (d) => (d.reconsider ? 2.5 : 8))
     .attr('stroke-dasharray', (d) => (d.boundary ? '5,5' : 'none'))
 
-  // Append nodes.
+  // nodes.
   const node = svg
     .append('g')
     .selectAll('g')
@@ -81,19 +86,30 @@ export function Chart(invalidation, links, nodes, details) {
     let i = Math.floor(Math.random() * remaining.length)
     return remaining.splice(i, 1)[0]
   }
+
   //Circle
   node
     .append('circle')
     .attr('fill', (d) => (d.group === 'inner' ? '#eaedd4' : '#ACBED8'))
-    .attr('r', (d) => (d.group === 'inner' ? 80 : radius))
+    .attr('r', (d) => (d.group === 'inner' ? 90 : radius))
     .attr('cx', (i) => 200 * i + 1)
     //DETAILS
-    .attr('fill', (d) =>
-      details.covenant && d.group === 'inner' ? '#e6d6a8' : pickRandomColor()
-    )
+    .attr('fill', (d) => (d.group === 'inner' ? '#e6d6a8' : pickRandomColor()))
     .attr('stroke-width', (d) => (details.god && d.group === 'inner' ? 10 : 0))
     .attr('stroke', (d) =>
-      details.god && d.group === 'inner' ? '#33673b' : '#ffdba5'
+      details.god && d.group === 'inner' ? '#FFD700' : '#ffdba5'
+    )
+
+  //Marriage covenant outline
+  node
+    .append('circle')
+    .attr('r', (d) => (d.group === 'inner' ? 80 : radius))
+    .attr('fill', 'none')
+    .attr('stroke-width', (d) =>
+      details.covenant && d.group === 'inner' ? 10 : 0
+    )
+    .attr('stroke', (d) =>
+      details.covenant && d.group === 'inner' ? '#1eb534' : 'none'
     )
 
   const innerPerson = node
@@ -108,15 +124,13 @@ export function Chart(invalidation, links, nodes, details) {
     )
     .enter()
     .append('g')
-    .attr(
-      'transform',
-      (_, i) => `translate(${i === 0 ? -(80 - radius) : 80 - radius},0)`
+    .attr('transform', (_, i) =>
+      determineAlignment(i, details.alignment, radius)
     )
   innerPerson
     .append('circle')
     .attr('r', radius)
     .attr('fill', () => pickRandomColor())
-
   innerPerson
     .append('text')
     .attr('text-anchor', 'middle')
@@ -155,7 +169,7 @@ export function Chart(invalidation, links, nodes, details) {
         .attr('stroke-width', 2)
         .attr('fill', 'none')
         .attr('d', `M${-(80 - radius - 30)},0 L${80 - radius - 30},0`)
-        .attr('stroke', (d) => (links[0].quality ? goodColor : badColor))
+        // .attr('stroke', (d) => (links[0].quality ? goodColor : badColor))
         .attr('stroke-width', (d) => (links[0].reconsider ? 2.5 : 8))
         .attr('stroke-dasharray', (d) => (links[0].boundary ? '3,3' : 'none'))
     },

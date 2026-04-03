@@ -7,20 +7,20 @@
 <title>Family Dynamic Diagram | FamDynamicDiagram</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="preload" as="style" href="./_import/custom-style.47a246eb.css">
+<link rel="preload" as="style" href="./_import/custom-style.db7e1f89.css">
 <link rel="preload" as="style" href="./_observablehq/stdlib/inputs.ea9fd553.css">
 <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
-<link rel="stylesheet" type="text/css" href="./_import/custom-style.47a246eb.css">
+<link rel="stylesheet" type="text/css" href="./_import/custom-style.db7e1f89.css">
 <link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.ea9fd553.css">
 <link rel="modulepreload" href="./_observablehq/client.c8f42334.js">
 <link rel="modulepreload" href="./_observablehq/runtime.e080113b.js">
 <link rel="modulepreload" href="./_observablehq/stdlib.73a8ec5a.js">
-<link rel="modulepreload" href="./_import/components/Chart.08385630.js">
-<link rel="modulepreload" href="./_import/components/pure.b670e5db.js">
+<link rel="modulepreload" href="./_import/components/Chart.278d6715.js">
+<link rel="modulepreload" href="./_import/components/pure.69ec1998.js">
 <link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
 <link rel="modulepreload" href="./_npm/lodash@4.17.23/dde5ae91.js">
 <link rel="modulepreload" href="./_observablehq/stdlib/inputs.4ef1d259.js">
-<link rel="modulepreload" href="./_import/components/constants.a0205140.js">
+<link rel="modulepreload" href="./_import/components/constants.3f9c90eb.js">
 <link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
 <link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
 <link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
@@ -65,12 +65,12 @@
 import {define} from "./_observablehq/client.c8f42334.js";
 
 define({id: "8fe7e2bd", outputs: ["Chart","formatData","renderButtonText","renderLinks","flatten","formatDataFromTextInput","shapeLinksForSave","clear","clearStorage","cap","Generators","html"], body: async () => {
-const [{Chart}, {formatData, renderButtonText, renderLinks, flatten, formatDataFromTextInput, shapeLinksForSave, clear, clearStorage, cap}, {Generators}, {html}] = await Promise.all([import("./_import/components/Chart.08385630.js"), import("./_import/components/pure.b670e5db.js"), import("./_observablehq/stdlib.73a8ec5a.js"), import("./_npm/htl@0.3.1/72f4716c.js")]);
+const [{Chart}, {formatData, renderButtonText, renderLinks, flatten, formatDataFromTextInput, shapeLinksForSave, clear, clearStorage, cap}, {Generators}, {html}] = await Promise.all([import("./_import/components/Chart.278d6715.js"), import("./_import/components/pure.69ec1998.js"), import("./_observablehq/stdlib.73a8ec5a.js"), import("./_npm/htl@0.3.1/72f4716c.js")]);
 
 return {Chart,formatData,renderButtonText,renderLinks,flatten,formatDataFromTextInput,shapeLinksForSave,clear,clearStorage,cap,Generators,html};
 }});
 
-define({id: "a7e97c10", inputs: ["localStorage","Mutable","flatten","renderLinks","formatDataFromTextInput","fam","details","html","cap","renderButtonText","_"], outputs: ["savedLinkData","people","links","savePeople","Save","linksIntoString","renderToggleButton","toggleLinkProperty","saveLinksToLocalStorage","saveLinks"], body: (localStorage,Mutable,flatten,renderLinks,formatDataFromTextInput,fam,details,html,cap,renderButtonText,_) => {
+define({id: "efdbb064", inputs: ["localStorage","Mutable","flatten","renderLinks","formatDataFromTextInput","fam","details","html","cap","renderButtonText","_"], outputs: ["savedLinkData","people","links","savePeople","Save","linksIntoString","renderToggleButton","toggleLinkProperty","saveLinksToLocalStorage","saveLinks"], body: (localStorage,Mutable,flatten,renderLinks,formatDataFromTextInput,fam,details,html,cap,renderButtonText,_) => {
 //State
 let savedLinkData = JSON.parse(localStorage.getItem('links'))
 let people = Mutable(flatten(JSON.parse(localStorage.getItem('fam'))))
@@ -110,7 +110,7 @@ function linksIntoString(links) {
     const x = renderToggleButton(link, 'boundary')
     const z = renderToggleButton(link, 'reconsider')
     return html`
-      <div>
+      <div class="line">
         The relationship between
         <span>${cap(link.source.name)}</span>
         and
@@ -125,7 +125,8 @@ function renderToggleButton(link, prop) {
   const value = link[prop]
   return html`
     <button
-      style="color:${value ? 'green' : 'red'}"
+      class="toggle-button"
+      style="color:${value ? 'green' : 'red'};"
       onclick=${(e) => toggleLinkProperty(prop, link, e)}
     >
       ${renderButtonText(value)}
@@ -173,7 +174,7 @@ const famNames = JSON.parse(localStorage.getItem('fam'))
 return {famNames};
 }});
 
-define({id: "7ecc802b", inputs: ["view","Inputs","famNames","localStorage"], outputs: ["fam","detailsFromStorage","details"], body: (view,Inputs,famNames,localStorage) => {
+define({id: "8532ebe6", inputs: ["view","Inputs","famNames","localStorage"], outputs: ["fam","detailsFromStorage","details"], body: (view,Inputs,famNames,localStorage) => {
 const fam = view(
   Inputs.form({
     inner: Inputs.text({
@@ -197,8 +198,16 @@ const fam = view(
 const detailsFromStorage = JSON.parse(localStorage.getItem('details'))
 const details = view(
   Inputs.form({
-    covenant: Inputs.toggle({ label: 'Covenant', value: detailsFromStorage?.covenant || false }),
-    god: Inputs.toggle({ label: 'God', value: detailsFromStorage?.god || false }),
+    covenant: Inputs.toggle({
+      label: 'Marriage covenant',
+      value: detailsFromStorage?.covenant || false,
+    }),
+    god: Inputs.toggle({ label: 'God covenant', value: detailsFromStorage?.god || false }),
+    alignment: Inputs.radio(['25%', '50%', '75%'], {
+      value: detailsFromStorage?.alignment || null,
+      unique: true,
+      label: 'Degree of alignment:',
+    }),
   })
 )
 return {fam,detailsFromStorage,details};
@@ -240,15 +249,23 @@ saveLinks()
 ))
 }});
 
+define({id: "3ef3b3c3", inputs: ["links","people"], body: (links,people) => {
+if (links && people) {
+  document.body.classList.add('has-data')
+} else {
+  document.body.classList.remove('has-data')
+}
+}});
+
 define({id: "52c3c117", inputs: ["displayChart","goodColors","badColors"], body: (displayChart,goodColors,badColors) => {
 {
   displayChart.updateGoodColors(goodColors, badColors)
 }
 }});
 
-define({id: "b21414cf", inputs: ["Chart","invalidation","links","people","details","display"], outputs: ["displayChart"], body: (Chart,invalidation,links,people,details,display) => {
+define({id: "7db80b4f", inputs: ["Chart","invalidation","links","people","details","display"], outputs: ["displayChart"], body: (Chart,invalidation,links,people,details,display) => {
 const displayChart = Chart(invalidation, links, people, details)
-display(displayChart)
+if (links && people) display(displayChart)
 return {displayChart};
 }});
 
@@ -272,14 +289,23 @@ return {badColors};
 </aside>
 <main id="observablehq-main" class="observablehq">
 <h1 id="family-dynamic-diagram" tabindex="-1"><a class="observablehq-header-anchor" href="#family-dynamic-diagram">Family Dynamic Diagram</a></h1>
+<h4 id="an-interactive-graph-of-family-relationships" tabindex="-1"><a class="observablehq-header-anchor" href="#an-interactive-graph-of-family-relationships">An interactive graph of family relationships</a></h4>
 <div class="observablehq observablehq--block"><!--:8fe7e2bd:--></div>
-<div class="observablehq observablehq--block"><!--:a7e97c10:--></div>
+<div class="observablehq observablehq--block"><!--:efdbb064:--></div>
+<details>
+  <summary><strong>How to use</strong></summary>
+  <ol class="instructions">
+    <li>Enter family members</li>
+    <li>Define relationships</li>
+    <li>View your diagram</li>
+  </ol>
+</details>
 <div class="parent">
- <details> <summary>1. Family Input </summary>
+ <details> <summary>Family Input</summary>
    <div class="card">
 <p>Input the names of your family members, <strong>separated by commas</strong></p>
 <div class="observablehq observablehq--block"><!--:5e4a99cf:--></div>
-<div class="observablehq observablehq--block"><!--:7ecc802b:--></div>
+<div class="observablehq observablehq--block"><!--:8532ebe6:--></div>
 <p>When you are finished, click <observablehq-loading></observablehq-loading><!--:15138bea:--></p>
   <div>
    <observablehq-loading></observablehq-loading><!--:9a254680:-->
@@ -288,13 +314,14 @@ return {badColors};
   </details>
 <details>
   <summary>
-  2. Relations
+  Relations
   </summary>
+<strong>Define your families' relationships</strong>
   <details>
   <summary>
   Inner
   </summary>
-  <div>
+  <div class="card">
    <observablehq-loading></observablehq-loading><!--:8fe82676:-->
   </div>
   </details>
@@ -302,7 +329,7 @@ return {badColors};
   <summary>
   Middle
   </summary>
-  <div>
+  <div class="card">
    <observablehq-loading></observablehq-loading><!--:0c5d156a:-->
   </div>
   </details>
@@ -310,7 +337,7 @@ return {badColors};
   <summary>
   Outer
   </summary>
-  <div>
+  <div class="card">
    <observablehq-loading></observablehq-loading><!--:b62ff32e:-->
   </div>
   </details>
@@ -319,14 +346,18 @@ return {badColors};
 </div>
 </details>
 
-<div class="card grid-row-span-2 grid-cols-span-2 chart">
+<div class="observablehq observablehq--block"><!--:3ef3b3c3:--></div>
+<div class="empty-state">
+  No data yet — add your family to begin
+</div>
+<div class="card grid-row-span-2 grid-cols-span-2 chart color-options">
 <div class="observablehq observablehq--block"><!--:52c3c117:--></div>
-<div class="observablehq observablehq--block"><!--:b21414cf:--></div>
-<details>
+<div class="observablehq observablehq--block"><!--:7db80b4f:--></div>
+<details class="color-options">
   <summary>
   Color Options
   </summary>
-  <div class="card">
+  <div>
 <div class="observablehq observablehq--block"><!--:9f0b0c5c:--></div>
 <div class="observablehq observablehq--block"><!--:204617a8:--></div>
   </div>

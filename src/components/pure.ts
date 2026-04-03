@@ -29,7 +29,8 @@ export function formatDataFromTextInput(fam: Input): fam {
   return res
 }
 
-export function renderButtonText(prop: boolean) {
+export function renderButtonText(prop: boolean, edgeCase: boolean) {
+  if (edgeCase) return prop ? 'certainly' : 'possibly'
   return prop ? 'good' : 'bad'
 }
 
@@ -130,4 +131,16 @@ export function clearStorage() {
 
 export function cap(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+export function determineAlignment(i: number, degree: string, radius) {
+  let distance = 70
+  if (degree === '25%') {
+    distance = 80
+  } else if (degree === '50%') {
+    distance = 70
+  } else if (degree === '75%') {
+    distance = 60
+  }
+  return `translate(${i === 0 ? -(distance - radius) : distance - radius},0)`
 }

@@ -101,11 +101,22 @@ export function clear() {
 }
 export function clearStorage() {
   return html`
-    <div>
+    <div class="save-wrapper">
       <button onclick=${clear}>Clear</button>
     </div>
   `;
 }
 export function cap(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+export function determineAlignment(i, degree, radius) {
+  let distance = 70;
+  if (degree === "25%") {
+    distance = 80;
+  } else if (degree === "50%") {
+    distance = 70;
+  } else if (degree === "75%") {
+    distance = 60;
+  }
+  return `translate(${i === 0 ? -(distance - radius) : distance - radius},0)`;
 }
